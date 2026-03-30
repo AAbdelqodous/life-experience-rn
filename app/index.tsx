@@ -1,9 +1,4 @@
-import { Text, View } from "react-native";
-
-export default function Index() {
-  return (
-    <View className="flex-1 items-center justify-center">
-      <Text className="text-3xl font-bold">Welcome to Maintenance Platform</Text>
-    </View>
-  );
-}
+// Root index — the actual routing is handled by app/_layout.tsx bootstrap logic.
+// This file exists only to satisfy Expo Router's route requirements.
+// Bootstrap in _layout.tsx replaces this route before it renders.
+export { default } from './(auth)/index';

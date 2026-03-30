@@ -1,0 +1,83 @@
+{
+  "onboarding": {
+    "slide1": {
+      "title": "ابحث عن مراكز الصيانة",
+      "subtitle": "اكتشف ورش الإصلاح الموثوقة لسيارتك وإلكترونياتك وأجهزة منزلك القريبة منك."
+    },
+    "slide2": {
+      "title": "احجز الخدمات بسهولة",
+      "subtitle": "تصفح الخدمات المتاحة وقارن الأسعار واحجز مواعيدك في دقائق."
+    },
+    "slide3": {
+      "title": "تابع إصلاحاتك",
+      "subtitle": "ابق على اطلاع بحالة خدمتك وتواصل مباشرة مع المركز."
+    },
+    "skip": "تخطي",
+    "next": "التالي",
+    "getStarted": "ابدأ الآن"
+  },
+  "auth": {
+    "entry": {
+      "title": "مراكز الصيانة",
+      "subtitle": "سوقك الموثوق للخدمات",
+      "signIn": "تسجيل الدخول",
+      "createAccount": "إنشاء حساب"
+    },
+    "register": {
+      "title": "إنشاء حساب",
+      "firstnameLabel": "الاسم الأول",
+      "firstnamePlaceholder": "أدخل اسمك الأول",
+      "lastnameLabel": "اسم العائلة",
+      "lastnamePlaceholder": "أدخل اسم عائلتك",
+      "emailLabel": "البريد الإلكتروني",
+      "emailPlaceholder": "أدخل بريدك الإلكتروني",
+      "passwordLabel": "كلمة المرور",
+      "passwordPlaceholder": "8 أحرف على الأقل",
+      "submitButton": "إنشاء الحساب",
+      "alreadyHaveAccount": "لديك حساب بالفعل؟",
+      "signInLink": "تسجيل الدخول"
+    },
+    "otp": {
+      "title": "تحقق من بريدك الإلكتروني",
+      "subtitle": "أرسلنا رمزاً مكوناً من 6 أرقام إلى {{email}}",
+      "submitButton": "تحقق",
+      "resendCode": "إعادة إرسال الرمز",
+      "newCodeSent": "تم إرسال رمز تحقق جديد إلى بريدك الإلكتروني.",
+      "invalidCode": "الرمز غير صحيح. حاول مرة أخرى.",
+      "expiredCode": "انتهت صلاحية الرمز. تم إرسال رمز جديد."
+    },
+    "login": {
+      "title": "مرحباً بعودتك",
+      "emailLabel": "البريد الإلكتروني",
+      "emailPlaceholder": "أدخل بريدك الإلكتروني",
+      "passwordLabel": "كلمة المرور",
+      "passwordPlaceholder": "أدخل كلمة المرور",
+      "submitButton": "تسجيل الدخول",
+      "forgotPassword": "نسيت كلمة المرور؟",
+      "noAccount": "ليس لديك حساب؟",
+      "registerLink": "إنشاء حساب"
+    }
+  },
+  "home": {
+    "welcome": "مرحباً، {{name}}!",
+    "logout": "تسجيل الخروج"
+  },
+  "language": {
+    "switchTo": "English",
+    "current": "ع"
+  },
+  "errors": {
+    "required": "هذا الحقل مطلوب",
+    "invalidEmail": "يرجى إدخال بريد إلكتروني صحيح",
+    "passwordTooShort": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+    "incorrectCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+    "accountLocked": "تم قفل حسابك. يرجى التواصل مع الدعم.",
+    "accountDisabled": "يرجى التحقق من بريدك الإلكتروني قبل تسجيل الدخول.",
+    "emailInUse": "هذا البريد الإلكتروني مسجل بالفعل.",
+    "noInternet": "لا يوجد اتصال بالإنترنت. يرجى التحقق من شبكتك والمحاولة مجدداً.",
+    "serverError": "حدث خطأ ما. يرجى المحاولة مجدداً.",
+    "sessionExpired": "انتهت جلستك. يرجى تسجيل الدخول مجدداً.",
+    "appCrash": "حدث خطأ غير متوقع.",
+    "restartApp": "إعادة تشغيل التطبيق"
+  }
+}

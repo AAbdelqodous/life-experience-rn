@@ -1,0 +1,83 @@
+{
+  "onboarding": {
+    "slide1": {
+      "title": "Find Maintenance Centers",
+      "subtitle": "Discover trusted repair shops for your car, electronics, and home appliances near you."
+    },
+    "slide2": {
+      "title": "Book Services Easily",
+      "subtitle": "Browse available services, compare prices, and book appointments in minutes."
+    },
+    "slide3": {
+      "title": "Track Your Repairs",
+      "subtitle": "Stay updated on your service status and communicate directly with the center."
+    },
+    "skip": "Skip",
+    "next": "Next",
+    "getStarted": "Get Started"
+  },
+  "auth": {
+    "entry": {
+      "title": "Maintenance Centers",
+      "subtitle": "Your trusted service marketplace",
+      "signIn": "Sign In",
+      "createAccount": "Create Account"
+    },
+    "register": {
+      "title": "Create Account",
+      "firstnameLabel": "First Name",
+      "firstnamePlaceholder": "Enter your first name",
+      "lastnameLabel": "Last Name",
+      "lastnamePlaceholder": "Enter your last name",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "Enter your email",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "At least 8 characters",
+      "submitButton": "Create Account",
+      "alreadyHaveAccount": "Already have an account?",
+      "signInLink": "Sign In"
+    },
+    "otp": {
+      "title": "Verify Your Email",
+      "subtitle": "We sent a 6-digit code to {{email}}",
+      "submitButton": "Verify",
+      "resendCode": "Resend Code",
+      "newCodeSent": "A new verification code has been sent to your email.",
+      "invalidCode": "Incorrect code. Please try again.",
+      "expiredCode": "Your code has expired. A new code has been sent."
+    },
+    "login": {
+      "title": "Welcome Back",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "Enter your email",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "submitButton": "Sign In",
+      "forgotPassword": "Forgot Password?",
+      "noAccount": "Don't have an account?",
+      "registerLink": "Create Account"
+    }
+  },
+  "home": {
+    "welcome": "Welcome, {{name}}!",
+    "logout": "Log Out"
+  },
+  "language": {
+    "switchTo": "العربية",
+    "current": "EN"
+  },
+  "errors": {
+    "required": "This field is required",
+    "invalidEmail": "Please enter a valid email address",
+    "passwordTooShort": "Password must be at least 8 characters",
+    "incorrectCredentials": "Incorrect email or password",
+    "accountLocked": "Your account has been locked. Please contact support.",
+    "accountDisabled": "Please verify your email before signing in.",
+    "emailInUse": "This email is already registered.",
+    "noInternet": "No internet connection. Please check your network and try again.",
+    "serverError": "Something went wrong. Please try again.",
+    "sessionExpired": "Your session has expired. Please sign in again.",
+    "appCrash": "An unexpected error occurred.",
+    "restartApp": "Restart App"
+  }
+}

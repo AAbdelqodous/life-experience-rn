@@ -1,4 +1,4 @@
-# Maintenance Center Platform — Claude Code Context
+﻿# Maintenance Center Platform — Claude Code Context
 
 ## 🎯 Project Overview
 
