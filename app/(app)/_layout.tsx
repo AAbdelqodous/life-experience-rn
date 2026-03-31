@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
 import { Stack, router, usePathname } from 'expo-router';
+import React, { useEffect } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 
 export default function AppLayout() {
@@ -17,6 +17,9 @@ export default function AppLayout() {
   }, [pathname, isAuthenticated, isSessionExpired, logout]);
 
   return (
-    <Stack screenOptions={{ headerShown: false }} />
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="(tabs)" />
+      <Stack.Screen name="search" />
+    </Stack>
   );
 }
