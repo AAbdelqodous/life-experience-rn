@@ -241,6 +241,14 @@ export default function ProfileScreen() {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.menuItem}
+            onPress={() => handleNavigateTo('/(app)/complaints')}
+          >
+            <Ionicons name="document-text-outline" size={20} color="#757575" />
+            <AppText style={styles.menuText}>{t('complaint.myComplaints')}</AppText>
+            <Ionicons name="chevron-forward" size={20} color="#9E9E9E" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.menuItem}
             onPress={handleChangePassword}
           >
             <Ionicons name="lock-closed-outline" size={20} color="#757575" />

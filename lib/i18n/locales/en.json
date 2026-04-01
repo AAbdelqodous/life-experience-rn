@@ -115,6 +115,7 @@
     "call": "Call",
     "directions": "Directions",
     "share": "Share",
+    "chatWithCenter": "Chat with Center",
     "addToFavorites": "Add to Favorites",
     "removeFromFavorites": "Remove from Favorites",
     "openingHours": "Opening Hours",
@@ -236,6 +237,68 @@
     "help": "Help & Support",
     "about": "About"
   },
+  "settings": {
+    "language": "Language",
+    "notifications": "Notifications",
+    "bookingUpdates": "Booking Updates",
+    "newMessages": "New Messages",
+    "promotions": "Promotions & Offers",
+    "systemNotifications": "System Notifications"
+  },
+  "about": {
+    "title": "About",
+    "version": "Version",
+    "tagline": "Your trusted service marketplace in Kuwait",
+    "connectWithUs": "Connect With Us",
+    "contact": "Contact"
+  },
+  "help": {
+    "title": "Help & Support",
+    "faq": "Frequently Asked Questions",
+    "contactUs": "Contact Us",
+    "reportProblem": "Report a Problem",
+    "reportProblemMessage": "This feature is coming soon. For now, please contact us directly.",
+    "faq1": {
+      "question": "How do I book a service?",
+      "answer": "Browse through our centers, select the service you need, choose a convenient date and time, and confirm your booking."
+    },
+    "faq2": {
+      "question": "How can I cancel my booking?",
+      "answer": "Go to My Bookings, select the booking you want to cancel, and tap the Cancel button. Please note that cancellation policies may vary by center."
+    },
+    "faq3": {
+      "question": "How do I contact a center directly?",
+      "answer": "You can start a conversation with any center through our chat feature. Navigate to the center's page and tap the chat icon."
+    }
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Last updated: January 2025",
+    "dataCollection": "Data Collection",
+    "dataCollectionText": "We collect information you provide directly, such as your name, email address, phone number, and location when you create an account or use our services.",
+    "dataUsage": "How We Use Your Data",
+    "dataUsageText": "We use your information to provide, maintain, and improve our services, process transactions, send you technical notices and support messages, and respond to your comments and questions.",
+    "dataSharing": "Data Sharing",
+    "dataSharingText": "We do not sell your personal information. We may share your data with service providers who perform services on our behalf and with maintenance centers you book services with.",
+    "yourRights": "Your Rights",
+    "yourRightsText": "You have the right to access, update, or delete your personal information at any time. You can also opt out of receiving promotional communications from us.",
+    "security": "Data Security",
+    "securityText": "We implement appropriate technical and organizational measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction."
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "lastUpdated": "Last updated: January 2025",
+    "acceptance": "Acceptance of Terms",
+    "acceptanceText": "By accessing or using the Maintenance Centers app, you agree to be bound by these Terms of Service. If you disagree with any part of these terms, you may not access the service.",
+    "services": "Our Services",
+    "servicesText": "Maintenance Centers provides a platform connecting users with maintenance service providers in Kuwait. We facilitate bookings, payments, and communication between users and centers.",
+    "userResponsibilities": "User Responsibilities",
+    "userResponsibilitiesText": "You are responsible for maintaining the confidentiality of your account and password. You agree to accept responsibility for all activities that occur under your account.",
+    "bookings": "Bookings and Payments",
+    "bookingsText": "All bookings are subject to availability. Payment terms are agreed upon between you and the service provider. We are not liable for any disputes arising from services rendered.",
+    "limitation": "Limitation of Liability",
+    "limitationText": "In no event shall Maintenance Centers be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses."
+  },
   "notification": {
     "title": "Notifications",
     "markAllRead": "Mark All as Read",
@@ -243,6 +306,7 @@
     "noNotifications": "No notifications",
     "noNotificationsMessage": "You're all caught up!",
     "justNow": "Just now",
+    "yesterday": "Yesterday",
     "minutesAgo": "{{count}} min ago",
     "hoursAgo": "{{count}} hr ago",
     "daysAgo": "{{count}} day ago",
@@ -287,7 +351,7 @@
     "descriptionPlaceholder": "Please describe your issue in detail...",
     "submit": "Submit Complaint",
     "complaintDetails": "Complaint Details",
-    "status": "Status",
+    "statusLabel": "Status",
     "submittedOn": "Submitted On",
     "response": "Response",
     "noResponse": "No response yet",
@@ -306,6 +370,18 @@
       "resolved": "Resolved",
       "rejected": "Rejected"
     },
+    "priority": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "urgent": "Urgent"
+    },
+    "fileComplaint": "File a Complaint",
+    "resolvedOn": "Resolved On",
+    "centerRequired": "Go to a center or booking to file a complaint.",
+    "filingAgainst": "Center:",
+    "linkedBooking": "Linked Booking",
+    "priorityLabel": "Priority",
     "success": "Complaint submitted successfully!",
     "submitError": "Failed to submit complaint. Please try again."
   },

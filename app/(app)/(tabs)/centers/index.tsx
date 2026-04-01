@@ -9,7 +9,7 @@ import FilterModal from '../../../../components/ui/FilterModal';
 import SearchBar from '../../../../components/ui/SearchBar';
 import { useAppDispatch, useAppSelector } from '../../../../store';
 import { useGetCategoriesQuery, useGetCentersQuery } from '../../../../store/api/centersApi';
-import { addRecentSearch, setFilters } from '../../../../store/centersSlice';
+import { addRecentSearch, clearRecentSearches, removeRecentSearch, setFilters } from '../../../../store/centersSlice';
 
 export default function CentersScreen() {
   const { t, i18n } = useTranslation();
@@ -86,7 +86,7 @@ export default function CentersScreen() {
       <AppText style={styles.recentSearchText}>{search}</AppText>
       <TouchableOpacity
         onPress={() => {
-          // Handle remove recent search
+          dispatch(removeRecentSearch(search));
         }}
       >
         <Ionicons name="close-outline" size={20} color="#9E9E9E" />
@@ -121,7 +121,7 @@ export default function CentersScreen() {
             </AppText>
             <TouchableOpacity
               onPress={() => {
-                // Handle clear all recent searches
+                dispatch(clearRecentSearches());
               }}
             >
               <AppText style={styles.clearHistory}>{t('search.clearHistory')}</AppText>

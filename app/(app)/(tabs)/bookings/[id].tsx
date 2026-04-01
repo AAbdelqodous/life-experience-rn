@@ -245,6 +245,24 @@ export default function BookingDetailScreen() {
               style={[styles.actionButton, styles.cancelButton] as any}
             />
           )}
+          {(booking.status === 'COMPLETED' || booking.status === 'CANCELLED') && (
+            <AppButton
+              title={t('complaint.fileComplaint')}
+              onPress={() => {
+                router.push({
+                  pathname: '/(app)/complaints/new',
+                  params: {
+                    bookingId: String(booking.id),
+                    centerId: String(booking.centerId),
+                    centerNameAr: booking.centerNameAr,
+                    centerNameEn: booking.centerNameEn,
+                  },
+                });
+              }}
+              variant="secondary"
+              style={styles.actionButton as any}
+            />
+          )}
         </View>
       </View>
 
