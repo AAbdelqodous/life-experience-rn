@@ -47,7 +47,10 @@ const chatSlice = createSlice({
       state.unreadConversationsCount = action.payload;
     },
     incrementUnreadConversations: (state) => {
-      state.unreadConversationsCount += 1;
+      state.unreadConversationsCount = Math.min(
+        state.unreadConversationsCount + 1,
+        999 // Reasonable upper bound
+      );
     },
     decrementUnreadConversations: (state) => {
       state.unreadConversationsCount = Math.max(0, state.unreadConversationsCount - 1);

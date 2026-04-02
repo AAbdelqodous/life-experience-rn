@@ -124,7 +124,9 @@
     "noReviews": "لا توجد تقييمات بعد",
     "beFirstToReview": "كن أول من يقي هذا المركز!",
     "allReviews": "جميع التقييمات",
-    "viewOnMap": "عرض على الخريطة"
+    "viewOnMap": "عرض على الخريطة",
+    "averageRating": "متوسط التقييم",
+    "rating": "التقييم"
   },
   "booking": {
     "title": "حجز خدمة",
@@ -200,6 +202,8 @@
     "updateSuccess": "تم تحديث التقييم بنجاح!",
     "deleteSuccess": "تم حذف التقييم بنجاح!",
     "deleteConfirm": "هل أنت متأكد من حذف هذا التقييم؟",
+    "editReview": "تعديل التقييم",
+    "saveChanges": "حفظ التغييرات",
     "cancel": "إلغاء",
     "confirm": "تأكيد"
   },
@@ -235,7 +239,10 @@
     "privacy": "سياسة الخصوصية",
     "terms": "شروط الخدمة",
     "help": "المساعدة والدعم",
-    "about": "حول"
+    "about": "حول",
+    "photoUpdated": "تم تحديث صورة الملف الشخصي بنجاح!",
+    "photoPermissionTitle": "إذن مطلوب",
+    "photoPermissionMessage": "يرجى السماح بالوصول إلى مكتبة الصور لتحديث صورة ملفك الشخصي."
   },
   "settings": {
     "language": "اللغة",

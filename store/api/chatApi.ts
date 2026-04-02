@@ -5,8 +5,9 @@ import { RootState } from '../index';
 // ── Types ───────────────────────────────────────────────────────────────────────
 
 export enum SenderType {
-  USER = 'USER',
-  CENTER = 'CENTER',
+  CUSTOMER = 'CUSTOMER',
+  CENTER_STAFF = 'CENTER_STAFF',
+  SYSTEM = 'SYSTEM',
 }
 
 export enum MessageType {
@@ -38,16 +39,13 @@ export interface Message {
   type: MessageType;
   content: string;
   imageUrl?: string;
-  isRead: boolean;
+  read: boolean;
   createdAt: string;
-  readAt?: string;
 }
 
 export interface SendMessageRequest {
-  conversationId: number;
+  centerId: number;
   content: string;
-  type?: MessageType;
-  imageUrl?: string;
 }
 
 export interface ConversationsQueryParams {
@@ -107,10 +105,6 @@ export const chatApi = createApi({
       }),
     }),
 
-    getConversationById: builder.query<Conversation, number>({
-      query: (id) => `/conversations/${id}`,
-    }),
-
     getMessages: builder.query<MessagesResponse, { conversationId: number; params?: MessagesQueryParams }>({
       query: ({ conversationId, params }) => ({
         url: `/conversations/${conversationId}/messages`,
@@ -120,7 +114,7 @@ export const chatApi = createApi({
 
     sendMessage: builder.mutation<Message, SendMessageRequest>({
       query: (body) => ({
-        url: '/messages',
+        url: '/conversations/messages',
         method: 'POST',
         body,
       }),
@@ -145,7 +139,6 @@ export const chatApi = createApi({
 
 export const {
   useGetMyConversationsQuery,
-  useGetConversationByIdQuery,
   useGetMessagesQuery,
   useSendMessageMutation,
   useMarkMessagesAsReadMutation,

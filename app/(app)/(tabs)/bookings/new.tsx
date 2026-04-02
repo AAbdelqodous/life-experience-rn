@@ -81,8 +81,23 @@ export default function NewBookingScreen() {
     { value: PaymentMethod.CREDIT_CARD, label: t('booking.paymentMethod.credit_card'), icon: '💳' },
   ];
 
+  const handleNextStep = () => {
+    if (step === 0 && !selectedServiceType) {
+      Alert.alert(t('common.error'), t('booking.selectService'));
+      return;
+    }
+    if (step === 1 && (!selectedDate || !selectedTime)) {
+      Alert.alert(t('common.error'), t('booking.selectDate'));
+      return;
+    }
+    setStep(step + 1);
+  };
+
   const handleConfirm = async () => {
-    if (!selectedServiceType || !selectedDate || !selectedTime || !centerId) return;
+    if (!selectedServiceType || !selectedDate || !selectedTime || !centerId) {
+      Alert.alert(t('common.error'), t('common.retry'));
+      return;
+    }
     try {
       await createBooking({
         centerId: Number(centerId),
@@ -229,7 +244,7 @@ export default function NewBookingScreen() {
                 <AppText style={styles.summaryValue}>{centerName}</AppText>
               </View>
               <View style={styles.summaryRow}>
-                <AppText style={styles.summaryLabel}>{t('booking.serviceType')}</AppText>
+                <AppText style={styles.summaryLabel}>{t('booking.serviceTypeLabel')}</AppText>
                 <AppText style={styles.summaryValue}>
                   {serviceTypes.find(s => s.value === selectedServiceType)?.label}
                 </AppText>
@@ -286,7 +301,7 @@ export default function NewBookingScreen() {
         {step < 2 ? (
           <AppButton
             title={t('common.next')}
-            onPress={() => setStep(step + 1)}
+            onPress={handleNextStep}
             style={styles.nextButton}
           />
         ) : (

@@ -35,15 +35,15 @@ export default function MessageBubble({ message, isCurrentUser }: MessageBubbleP
           isCurrentUser ? styles.currentUserBubble : styles.otherUserBubble,
         ]}
       >
-        {message.senderType === SenderType.CENTER && !isCurrentUser && (
+        {message.senderType === SenderType.CENTER_STAFF && !isCurrentUser && (
           <AppText style={styles.senderName}>{message.senderName}</AppText>
         )}
         <AppText style={styles.content}>{message.content}</AppText>
         <View style={styles.footer}>
           <AppText style={[styles.time, !isCurrentUser && styles.timeOther]}>{formatTime(message.createdAt)}</AppText>
           {isCurrentUser && (
-            <AppText style={[styles.readStatus, message.isRead && styles.read]}>
-              {message.isRead ? '✓✓' : '✓'}
+            <AppText style={[styles.readStatus, message.read && styles.read]}>
+              {message.read ? '✓✓' : '✓'}
             </AppText>
           )}
         </View>

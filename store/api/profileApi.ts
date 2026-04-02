@@ -32,6 +32,7 @@ export interface UserProfile {
   accountLocked: boolean;
   createdAt: string;
   lastModifiedDate: string;
+  profileImageUrl?: string;
 }
 
 export interface UpdateProfileRequest {
@@ -76,6 +77,16 @@ export const profileApi = createApi({
       }),
     }),
 
+    uploadProfileImage: builder.mutation<UserProfile, FormData>({
+      query: (formData) => ({
+        url: '/users/me/profile-image',
+        method: 'POST',
+        body: formData,
+        // Do NOT set Content-Type header — fetch sets it automatically with boundary for multipart
+        formData: true,
+      }),
+    }),
+
     changePassword: builder.mutation<void, ChangePasswordRequest>({
       query: (body) => ({
         url: '/users/me/change-password',
@@ -98,4 +109,5 @@ export const {
   useUpdateProfileMutation,
   useChangePasswordMutation,
   useDeleteAccountMutation,
+  useUploadProfileImageMutation,
 } = profileApi;

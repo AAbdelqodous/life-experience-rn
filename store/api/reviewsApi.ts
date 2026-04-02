@@ -6,11 +6,13 @@ import { RootState } from '../index';
 
 export interface Review {
   id: number;
-  userId: number;
-  userName: string;
-  centerId: number;
   rating: number;
   comment: string;
+  centerId: number;
+  centerNameAr: string;
+  centerNameEn: string;
+  userFirstname: string;
+  userLastname: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -22,17 +24,14 @@ export interface CreateReviewRequest {
 }
 
 export interface UpdateReviewRequest {
-  rating?: number;
-  comment?: string;
+  centerId: number;
+  rating: number;
+  comment: string;
 }
 
 export interface ReviewsQueryParams {
   page?: number;
   size?: number;
-  centerId?: number;
-  minRating?: number;
-  sortBy?: 'date' | 'rating';
-  sortOrder?: 'asc' | 'desc';
 }
 
 export interface ReviewsResponse {
@@ -43,19 +42,6 @@ export interface ReviewsResponse {
   number: number;
   first: boolean;
   last: boolean;
-}
-
-export interface CenterRatingSummary {
-  centerId: number;
-  averageRating: number;
-  totalReviews: number;
-  ratingDistribution: {
-    5: number;
-    4: number;
-    3: number;
-    2: number;
-    1: number;
-  };
 }
 
 // ── API slice ───────────────────────────────────────────────────────────────────
@@ -73,10 +59,10 @@ export const reviewsApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getReviews: builder.query<ReviewsResponse, ReviewsQueryParams>({
-      query: (params) => ({
-        url: '/reviews',
-        params,
+    getCenterReviews: builder.query<ReviewsResponse, { centerId: number; page?: number; size?: number }>({
+      query: ({ centerId, page = 0, size = 10 }) => ({
+        url: `/reviews/center/${centerId}`,
+        params: { page, size },
       }),
     }),
 
@@ -85,10 +71,6 @@ export const reviewsApi = createApi({
         url: '/reviews/my',
         params,
       }),
-    }),
-
-    getReviewById: builder.query<Review, number>({
-      query: (id) => `/reviews/${id}`,
     }),
 
     createReview: builder.mutation<Review, CreateReviewRequest>({
@@ -102,7 +84,7 @@ export const reviewsApi = createApi({
     updateReview: builder.mutation<Review, { id: number; data: UpdateReviewRequest }>({
       query: ({ id, data }) => ({
         url: `/reviews/${id}`,
-        method: 'PATCH',
+        method: 'PUT',
         body: data,
       }),
     }),
@@ -113,19 +95,13 @@ export const reviewsApi = createApi({
         method: 'DELETE',
       }),
     }),
-
-    getCenterRatingSummary: builder.query<CenterRatingSummary, number>({
-      query: (centerId) => `/reviews/center/${centerId}/summary`,
-    }),
   }),
 });
 
 export const {
-  useGetReviewsQuery,
+  useGetCenterReviewsQuery,
   useGetMyReviewsQuery,
-  useGetReviewByIdQuery,
   useCreateReviewMutation,
   useUpdateReviewMutation,
   useDeleteReviewMutation,
-  useGetCenterRatingSummaryQuery,
 } = reviewsApi;

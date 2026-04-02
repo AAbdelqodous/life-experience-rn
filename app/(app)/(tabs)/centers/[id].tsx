@@ -4,14 +4,12 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, Image, Modal, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import ReviewCard from '../../../../components/listings/ReviewCard';
-import { AppButton } from '../../../../components/ui/AppButton';
 import { AppText } from '../../../../components/ui/AppText';
 import RatingStars from '../../../../components/ui/RatingStars';
 import { useAppDispatch, useAppSelector } from '../../../../store';
 import { useGetCenterByIdQuery } from '../../../../store/api/centersApi';
-import { useAddFavoriteMutation, useRemoveFavoriteMutation } from '../../../../store/api/favoritesApi';
-import { useCreateReviewMutation, useGetReviewsQuery } from '../../../../store/api/reviewsApi';
 import { useCreateConversationMutation } from '../../../../store/api/chatApi';
+import { useAddFavoriteMutation, useRemoveFavoriteMutation } from '../../../../store/api/favoritesApi';
 import { addToFavorites, removeFromFavorites, selectIsFavorite } from '../../../../store/favoritesSlice';
 
 export default function CenterDetailScreen() {
@@ -24,13 +22,7 @@ export default function CenterDetailScreen() {
   const centerId = Number(params.id);
 
   const { data: center, isLoading: centerLoading } = useGetCenterByIdQuery(centerId);
-  const { data: reviewsData } = useGetReviewsQuery({
-    centerId,
-    page: 0,
-    size: 5,
-    sortBy: 'date',
-    sortOrder: 'desc',
-  });
+  const { data: reviewsData } = useGetCenterReviewsQuery({ centerId, page: 0, size: 10 });
 
   const isFavorite = useAppSelector((state) => selectIsFavorite(state, centerId));
   const [addFavorite] = useAddFavoriteMutation();
@@ -152,7 +144,7 @@ export default function CenterDetailScreen() {
                 <AppText style={styles.sectionTitle}>{t('center.rating')}</AppText>
                 <View style={styles.ratingRow}>
                   <AppText style={styles.averageRating}>
-                    {t('center.averageRating')} {reviewsData.content.length > 0 ? `: ${reviewsData.content.reduce((sum, r) => sum + r.rating, 0) / reviewsData.content.length.toFixed(1)}` : ': N/A'}
+                    {t('center.averageRating')}{reviewsData.content.length > 0 ? `: ${(reviewsData.content.reduce((sum, r) => sum + r.rating, 0) / reviewsData.content.length).toFixed(1)}` : ': N/A'}
                   </AppText>
                   <RatingStars rating={reviewsData.content.length > 0 ? reviewsData.content.reduce((sum, r) => sum + r.rating, 0) / reviewsData.content.length : 0} />
                 </View>
@@ -236,7 +228,8 @@ export default function CenterDetailScreen() {
                   key={item.id}
                   rating={item.rating}
                   comment={item.comment}
-                  userName={item.userName}
+                  userFirstname={item.userFirstname}
+                  userLastname={item.userLastname}
                   date={item.createdAt}
                 />
               )}

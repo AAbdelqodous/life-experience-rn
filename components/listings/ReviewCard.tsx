@@ -28,11 +28,11 @@ export default function ReviewCard({ review }: ReviewCardProps) {
         <View style={styles.userInfo}>
           <View style={styles.avatar}>
             <AppText style={styles.avatarText}>
-              {review.userName.charAt(0).toUpperCase()}
+              {review.userFirstname.charAt(0).toUpperCase()}
             </AppText>
           </View>
           <View style={styles.userDetails}>
-            <AppText style={styles.userName}>{review.userName}</AppText>
+            <AppText style={styles.userName}>{`${review.userFirstname} ${review.userLastname}`}</AppText>
             <AppText style={styles.date}>{formatDate(review.createdAt)}</AppText>
           </View>
         </View>

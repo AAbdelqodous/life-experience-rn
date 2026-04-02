@@ -4,7 +4,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { AppText } from '../../../../components/ui/AppText';
-import { useGetMyConversationsQuery } from '../../../../store/api/chatApi';
+import { Conversation, useGetMyConversationsQuery } from '../../../../store/api/chatApi';
 
 export default function ChatScreen() {
   const { t, i18n } = useTranslation();
@@ -44,10 +44,13 @@ export default function ChatScreen() {
     }
   };
 
-  const renderConversation = ({ item }: { item: any }) => (
+  const renderConversation = ({ item }: { item: Conversation }) => (
     <TouchableOpacity
       style={styles.conversationItem}
-      onPress={() => router.push(`/(app)/(tabs)/chat/${item.id}`)}
+      onPress={() => router.push({
+        pathname: '/(app)/(tabs)/chat/[id]',
+        params: { id: item.id, centerId: item.centerId, centerNameAr: item.centerNameAr, centerNameEn: item.centerNameEn },
+      })}
     >
       <View style={[styles.avatar, isRTL && styles.avatarRtl]}>
         <Ionicons name="business" size={24} color="#2196F3" />

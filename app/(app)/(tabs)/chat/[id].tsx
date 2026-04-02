@@ -1,19 +1,22 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-    ActivityIndicator,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View
 } from 'react-native';
 import MessageBubble from '../../../../components/chat/MessageBubble';
-import { MessageType, SenderType, useGetConversationByIdQuery, useGetMessagesQuery, useSendMessageMutation } from '../../../../store/api/chatApi';
+import { AppText } from '../../../../components/ui/AppText';
+import { useWebSocketChat } from '../../../../hooks/useWebSocketChat';
+import { Message, SenderType, useGetMessagesQuery, useSendMessageMutation } from '../../../../store/api/chatApi';
 
 export default function ChatDetailScreen() {
   const { t, i18n } = useTranslation();
@@ -23,52 +26,95 @@ export default function ChatDetailScreen() {
   const conversationId = Number(params.id);
 
   const [messageText, setMessageText] = useState('');
-  const flatListRef = useRef<ScrollView>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [sendError, setSendError] = useState<string | null>(null);
+  const flatListRef = useRef<FlatList<Message>>(null);
 
-  const { data: conversation, isLoading: conversationLoading } = useGetConversationByIdQuery(conversationId);
+  const centerNameAr = String(params.centerNameAr ?? '');
+  const centerNameEn = String(params.centerNameEn ?? '');
+  const centerName = isRTL ? centerNameAr : centerNameEn;
+
+  const { isConnected, connectionError, sendMessage: sendWsMessage, subscribeToConversation } = useWebSocketChat();
+
   const { data: messagesData, isLoading: messagesLoading } = useGetMessagesQuery(
-    { conversationId, params: { page: 0, size: 100, sortBy: 'date', sortOrder: 'asc' } },
-    { pollingInterval: 5000 }
+    { conversationId, params: { page: 0, size: 100, sortBy: 'date', sortOrder: 'asc' } }
   );
   const [sendMessage, { isLoading: sending }] = useSendMessageMutation();
 
-  const messages = messagesData?.content || [];
-
+  // Initialize messages from API response
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    if (messagesData?.content) {
+      setMessages(messagesData.content);
+    }
+  }, [messagesData]);
 
-  const scrollToBottom = () => {
-    if (flatListRef.current) {
+  // Subscribe to conversation for real-time updates
+  useEffect(() => {
+    const unsubscribe = subscribeToConversation(conversationId, (newMessage) => {
+      setMessages((prevMessages) => {
+        // Check if message already exists to avoid duplicates
+        const exists = prevMessages.some(m => m.id === newMessage.id);
+        if (exists) {
+          return prevMessages.map(m => m.id === newMessage.id ? newMessage : m);
+        }
+        return [...prevMessages, newMessage];
+      });
+      scrollToBottom();
+    });
+
+    return unsubscribe;
+  }, [conversationId, subscribeToConversation]);
+
+  // Show connection error alert
+  useEffect(() => {
+    if (connectionError) {
+      Alert.alert(
+        t('chat.connectionError') || 'Connection Error',
+        t('chat.connectionErrorMessage') || 'Failed to connect to chat server. Messages may not update in real-time.',
+        [{ text: t('common.ok') || 'OK' }]
+      );
+    }
+  }, [connectionError, t]);
+
+  const scrollToBottom = useCallback(() => {
+    if (flatListRef.current && messages.length > 0) {
       flatListRef.current.scrollToEnd({ animated: true });
     }
-  };
+  }, [messages.length]);
 
   const handleSend = async () => {
     if (!messageText.trim()) return;
 
     try {
-      await sendMessage({
-        conversationId,
-        content: messageText.trim(),
-        type: MessageType.TEXT,
-      }).unwrap();
+      // Try to send via WebSocket first
+      if (isConnected) {
+        sendWsMessage(conversationId, messageText.trim());
+      } else {
+        // Fallback to REST API if WebSocket is not connected
+        await sendMessage({
+          centerId: Number(params.centerId),
+          content: messageText.trim(),
+        }).unwrap();
+      }
       setMessageText('');
+      setSendError(null);
       scrollToBottom();
     } catch (error) {
       console.error('Failed to send message:', error);
+      setSendError(t('chat.sendFailed') || 'Failed to send message. Please try again.');
+      // Don't clear messageText so user can retry
     }
   };
 
-  if (conversationLoading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#2196F3" />
-      </View>
-    );
-  }
+  const renderMessage = useCallback(({ item }: { item: Message }) => (
+    <MessageBubble
+      key={item.id}
+      message={item}
+      isCurrentUser={item.senderType === SenderType.CUSTOMER}
+    />
+  ), []);
 
-  const centerName = conversation ? (isRTL ? conversation.centerNameAr : conversation.centerNameEn) : '';
+  const keyExtractor = useCallback((item: Message) => item.id.toString(), []);
 
   return (
     <>
@@ -79,6 +125,14 @@ export default function ChatDetailScreen() {
             <TouchableOpacity onPress={() => router.back()} style={styles.headerButton}>
               <Ionicons name={isRTL ? 'arrow-forward' : 'arrow-back'} size={24} color="#1A1A2E" />
             </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <View style={styles.connectionStatus}>
+              <View style={[
+                styles.connectionDot,
+                isConnected ? styles.connected : styles.disconnected
+              ]} />
+            </View>
           ),
           headerStyle: {
             backgroundColor: '#fff',
@@ -96,28 +150,36 @@ export default function ChatDetailScreen() {
         keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
       >
         <View style={styles.messagesContainer}>
-          {messagesLoading ? (
+          {messagesLoading && messages.length === 0 ? (
             <View style={styles.loadingContainer}>
               <ActivityIndicator size="large" color="#2196F3" />
             </View>
           ) : (
-            <ScrollView
+            <FlatList
               ref={flatListRef}
+              data={messages}
+              renderItem={renderMessage}
+              keyExtractor={keyExtractor}
               style={styles.messagesList}
               contentContainerStyle={styles.messagesContent}
               showsVerticalScrollIndicator={false}
               onContentSizeChange={scrollToBottom}
-            >
-              {messages.map((message) => (
-                <MessageBubble
-                  key={message.id}
-                  message={message}
-                  isCurrentUser={message.senderType === SenderType.USER}
-                />
-              ))}
-            </ScrollView>
+              onLayout={scrollToBottom}
+              inverted={false}
+              removeClippedSubviews={true}
+              maxToRenderPerBatch={10}
+              windowSize={10}
+              initialNumToRender={20}
+            />
           )}
         </View>
+
+        {sendError && (
+          <View style={styles.errorContainer}>
+            <Ionicons name="alert-circle" size={16} color="#F44336" />
+            <AppText style={styles.errorText}>{sendError}</AppText>
+          </View>
+        )}
 
         <View style={styles.inputContainer}>
           <TextInput
@@ -205,5 +267,36 @@ const styles = StyleSheet.create({
   },
   sendButtonDisabled: {
     backgroundColor: '#BDBDBD',
+  },
+  connectionStatus: {
+    marginRight: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  connectionDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
+  connected: {
+    backgroundColor: '#4CAF50',
+  },
+  disconnected: {
+    backgroundColor: '#F44336',
+  },
+  errorContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFEBEE',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    marginHorizontal: 16,
+    marginBottom: 8,
+    borderRadius: 8,
+  },
+  errorText: {
+    fontSize: 14,
+    color: '#C62828',
+    marginLeft: 8,
   },
 });

@@ -1,5 +1,5 @@
-import { Platform } from 'react-native';
 import Constants from 'expo-constants';
+import { Platform } from 'react-native';
 
 const configuredUrl = Constants.expoConfig?.extra?.apiBaseUrl as string | undefined;
 
@@ -14,3 +14,12 @@ function resolveApiUrl(url: string | undefined): string {
 }
 
 export const API_BASE_URL: string = resolveApiUrl(configuredUrl);
+
+// WebSocket URL - converts http:// to ws:// and https:// to wss://
+function resolveWebSocketUrl(apiUrl: string): string {
+  const wsUrl = apiUrl.replace(/^http/, 'ws');
+  // Remove /api/v1 suffix if present for WebSocket endpoint
+  return wsUrl.replace(/\/api\/v1$/, '');
+}
+
+export const WS_BASE_URL: string = resolveWebSocketUrl(API_BASE_URL);

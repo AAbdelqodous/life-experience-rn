@@ -1,13 +1,15 @@
 import { Ionicons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, Image, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { AppButton } from '../../../../components/ui/AppButton';
 import { AppText } from '../../../../components/ui/AppText';
 import { useAuth } from '../../../../hooks/useAuth';
+import { API_BASE_URL } from '../../../../lib/constants/config';
 import { useAppSelector } from '../../../../store';
-import { useChangePasswordMutation, useDeleteAccountMutation, useGetMyProfileQuery, useUpdateProfileMutation } from '../../../../store/api/profileApi';
+import { useChangePasswordMutation, useDeleteAccountMutation, useGetMyProfileQuery, useUpdateProfileMutation, useUploadProfileImageMutation } from '../../../../store/api/profileApi';
 
 export default function ProfileScreen() {
   const { t, i18n } = useTranslation();
@@ -21,6 +23,7 @@ export default function ProfileScreen() {
   const [updateProfile] = useUpdateProfileMutation();
   const [changePassword] = useChangePasswordMutation();
   const [deleteAccount] = useDeleteAccountMutation();
+  const [uploadProfileImage, { isLoading: uploading }] = useUploadProfileImageMutation();
 
   const [showEditProfile, setShowEditProfile] = useState(false);
   const [showChangePassword, setShowChangePassword] = useState(false);
@@ -47,6 +50,45 @@ export default function ProfileScreen() {
         dateOfBirth: profile.dateOfBirth || '',
       });
       setShowEditProfile(true);
+    }
+  };
+
+  const handlePickImage = async () => {
+    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permission.granted) {
+      Alert.alert(t('profile.photoPermissionTitle'), t('profile.photoPermissionMessage'));
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.8,
+    });
+
+    if (!result.canceled && result.assets[0]) {
+      const asset = result.assets[0];
+      const formData = new FormData();
+      // On web, expo-image-picker provides a real File object in asset.file.
+      // On native, we must use the {uri, name, type} object form.
+      if ((asset as any).file) {
+        formData.append('file', (asset as any).file, asset.fileName ?? 'profile.jpg');
+      } else {
+        formData.append('file', {
+          uri: asset.uri,
+          name: asset.fileName ?? 'profile.jpg',
+          type: asset.mimeType ?? 'image/jpeg',
+        } as any);
+      }
+
+      try {
+        await uploadProfileImage(formData).unwrap();
+        refetch();
+        Alert.alert(t('common.success'), t('profile.photoUpdated'));
+      } catch (error) {
+        Alert.alert(t('common.error'), t('errors.serverError'));
+      }
     }
   };
 
@@ -153,11 +195,27 @@ export default function ProfileScreen() {
       {/* Profile Header */}
       <View style={styles.header}>
         <View style={styles.avatarContainer}>
-          <View style={styles.avatar}>
-            <AppText style={styles.avatarText}>
-              {profile?.firstname?.charAt(0) || user?.firstname?.charAt(0) || 'U'}
-            </AppText>
-          </View>
+          <TouchableOpacity onPress={handlePickImage} disabled={uploading} style={styles.avatarTouchable}>
+            {profile?.profileImageUrl ? (
+              <Image
+                source={{ uri: profile.profileImageUrl?.startsWith('http') ? profile.profileImageUrl : `${API_BASE_URL.replace('/api/v1', '')}${profile.profileImageUrl}` }}
+                style={styles.avatarImage}
+              />
+            ) : (
+              <View style={styles.avatarPlaceholder}>
+                <AppText style={styles.avatarText}>
+                  {profile?.firstname?.charAt(0)?.toUpperCase() ?? '?'}
+                </AppText>
+              </View>
+            )}
+            <View style={styles.avatarEditBadge}>
+              {uploading ? (
+                <ActivityIndicator size="small" color="#fff" />
+              ) : (
+                <Ionicons name="camera" size={14} color="#fff" />
+              )}
+            </View>
+          </TouchableOpacity>
         </View>
         <View style={styles.headerInfo}>
           <AppText style={styles.name}>
@@ -238,6 +296,14 @@ export default function ProfileScreen() {
             <Ionicons name="notifications-outline" size={20} color="#757575" />
             <AppText style={styles.menuText}>{t('profile.notifications')}</AppText>
             <Ionicons name="chevron-forward" size={20} color="#9E9E9E" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => handleNavigateTo('/(app)/reviews')}
+          >
+            <Ionicons name="star-outline" size={20} color="#757575" />
+            <AppText style={styles.menuText}>{t('review.myReviews')}</AppText>
+            <Ionicons name={isRTL ? 'chevron-back' : 'chevron-forward'} size={16} color="#9E9E9E" />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.menuItem}
@@ -447,6 +513,47 @@ const styles = StyleSheet.create({
   },
   avatarContainer: {
     marginRight: 16,
+  },
+  avatarContainer: {
+    width: 80,
+    height: 80,
+    alignSelf: 'center',
+    marginBottom: 12,
+  },
+  avatarTouchable: {
+    width: 80,
+    height: 80,
+  },
+  avatarImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+  },
+  avatarPlaceholder: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: '#2196F3',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  avatarText: {
+    fontSize: 32,
+    fontWeight: '700',
+    color: '#fff',
+  },
+  avatarEditBadge: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: '#1A1A2E',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#fff',
   },
   avatar: {
     width: 64,
