@@ -24,7 +24,7 @@ export default function NotificationItem({ notification, onPress }: Notification
         return '#F44336';
       case NotificationPriority.HIGH:
         return '#FF9800';
-      case NotificationPriority.MEDIUM:
+      case NotificationPriority.NORMAL:
         return '#2196F3';
       case NotificationPriority.LOW:
         return '#757575';
@@ -91,11 +91,11 @@ export default function NotificationItem({ notification, onPress }: Notification
       activeOpacity={0.7}
     >
       <View style={styles.iconContainer}>
-        <AppText style={styles.icon}>{getTypeIcon(notification.type)}</AppText>
+        <AppText style={styles.icon}>{getTypeIcon(notification.notificationType)}</AppText>
         <View
           style={[
             styles.priorityDot,
-            { backgroundColor: getPriorityColor(notification.priority) },
+            { backgroundColor: getPriorityColor(notification.notificationPriority) },
           ]}
         />
       </View>

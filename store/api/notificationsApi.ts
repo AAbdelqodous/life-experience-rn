@@ -16,26 +16,25 @@ export enum NotificationType {
 
 export enum NotificationPriority {
   LOW = 'LOW',
-  MEDIUM = 'MEDIUM',
+  NORMAL = 'NORMAL',
   HIGH = 'HIGH',
   URGENT = 'URGENT',
 }
 
 export interface Notification {
   id: number;
-  userId: number;
-  type: NotificationType;
-  priority: NotificationPriority;
   titleAr: string;
   titleEn: string;
   bodyAr: string;
   bodyEn: string;
+  notificationType: NotificationType;
+  notificationPriority: NotificationPriority;
+  referenceType?: string;
+  referenceId?: number;
   isRead: boolean;
-  actionUrl?: string;
-  relatedEntityId?: number;
-  relatedEntityType?: string;
-  createdAt: string;
   readAt?: string;
+  actionUrl?: string;
+  createdAt: string;
 }
 
 export interface NotificationsQueryParams {
@@ -91,14 +90,14 @@ export const notificationsApi = createApi({
     markAsRead: builder.mutation<Notification, number>({
       query: (id) => ({
         url: `/notifications/${id}/read`,
-        method: 'POST',
+        method: 'PUT',
       }),
     }),
 
     markAllAsRead: builder.mutation<void, void>({
       query: () => ({
         url: '/notifications/read-all',
-        method: 'POST',
+        method: 'PUT',
       }),
     }),
 
@@ -110,7 +109,7 @@ export const notificationsApi = createApi({
     }),
 
     getUnreadCount: builder.query<UnreadCountResponse, void>({
-      query: () => '/notifications/unread-count',
+      query: () => '/notifications/count/unread',
     }),
   }),
 });

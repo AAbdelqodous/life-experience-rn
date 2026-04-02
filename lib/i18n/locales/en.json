@@ -59,6 +59,7 @@
     }
   },
   "home": {
+    "greeting": "Hello, {{name}}!",
     "welcome": "Welcome, {{name}}!",
     "logout": "Log Out",
     "title": "Home",
@@ -126,7 +127,9 @@
     "allReviews": "All Reviews",
     "viewOnMap": "View on Map",
     "averageRating": "Average Rating",
-    "rating": "Rating"
+    "rating": "Rating",
+    "seeAllReviews": "See All Reviews",
+    "viewAllReviews": "View all {{count}} reviews"
   },
   "booking": {
     "title": "Book a Service",
@@ -184,7 +187,19 @@
       "confirm": "Confirm"
     },
     "bookingConfirmed": "Your booking has been confirmed!",
-    "price": "Final Price"
+    "price": "Final Price",
+    "confirmation": "Booking Confirmation",
+    "confirmationSubtitle": "Please review your booking details before confirming.",
+    "appointment": "Appointment",
+    "editDetails": "Edit Details",
+    "termsAndConditions": "By confirming this booking, you agree to our terms and conditions.",
+    "bookingNumber": "Booking Number",
+    "bookingConfirmedMessage": "Your booking has been submitted successfully. You will receive a confirmation shortly.",
+    "confirmationEmail": "A confirmation has been sent.",
+    "reminderNotification": "You will be reminded before your appointment.",
+    "viewBooking": "View My Bookings",
+    "bookAnother": "Book Another Service",
+    "shareBooking": "Share Booking"
   },
   "review": {
     "title": "Write a Review",

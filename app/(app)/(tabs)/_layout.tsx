@@ -1,10 +1,15 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
+import { useGetUnreadCountQuery } from '@/store/api/notificationsApi';
 import { useTranslation } from 'react-i18next';
 
 export default function TabLayout() {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.dir() === 'rtl';
+  const { data: unreadData } = useGetUnreadCountQuery(undefined, {
+    pollingInterval: 30000,
+  });
+  const unreadCount = unreadData?.count ?? 0;
 
   return (
     <Tabs
@@ -78,6 +83,8 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="notifications" size={size} color={color} />
           ),
+          tabBarBadge: unreadCount > 0 ? (unreadCount > 99 ? '99+' : unreadCount) : undefined,
+          tabBarBadgeStyle: { backgroundColor: '#F44336', fontSize: 10 },
         }}
       />
       <Tabs.Screen

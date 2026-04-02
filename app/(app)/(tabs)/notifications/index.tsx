@@ -2,7 +2,7 @@ import NotificationItem from '@/components/listings/NotificationItem';
 import { AppText } from '@/components/ui/AppText';
 import FilterModal from '@/components/ui/FilterModal';
 import { useAppDispatch, useAppSelector } from '@/store';
-import { useDeleteNotificationMutation, useGetMyNotificationsQuery, useMarkAllAsReadMutation } from '@/store/api/notificationsApi';
+import { useDeleteNotificationMutation, useGetMyNotificationsQuery, useMarkAllAsReadMutation, useMarkAsReadMutation } from '@/store/api/notificationsApi';
 import { clearNotificationsFilters, markAllAsRead, setNotificationsFilters } from '@/store/notificationsSlice';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -30,6 +30,7 @@ export default function NotificationsScreen() {
   });
 
   const [markAllAsReadApi] = useMarkAllAsReadMutation();
+  const [markAsReadApi] = useMarkAsReadMutation();
   const [deleteNotificationApi] = useDeleteNotificationMutation();
 
   const handleApplyFilters = (newFilters: Record<string, any>) => {
@@ -55,18 +56,16 @@ export default function NotificationsScreen() {
   const handleNotificationPress = useCallback(async (notification: any) => {
     if (!notification.isRead) {
       try {
-        // Mark as read logic would go here
+        await markAsReadApi(notification.id).unwrap();
         refetch();
-      } catch (error) {
-        // Silently ignore mark-as-read errors
+      } catch {
+        // Silently ignore
       }
     }
-    
-    // Navigate to action URL if provided and valid
-    if (notification.actionUrl && typeof notification.actionUrl === 'string' && (notification.actionUrl.startsWith('/(app)/') || notification.actionUrl.startsWith('/'))) {
+    if (notification.actionUrl && (notification.actionUrl.startsWith('/(app)/') || notification.actionUrl.startsWith('/'))) {
       router.push(notification.actionUrl as any);
     }
-  }, [refetch, router]);
+  }, [markAsReadApi, refetch, router]);
 
   const handleDeleteNotification = async (notificationId: number) => {
     Alert.alert(

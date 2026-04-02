@@ -93,27 +93,23 @@ export default function NewBookingScreen() {
     setStep(step + 1);
   };
 
-  const handleConfirm = async () => {
+  const handleConfirm = () => {
     if (!selectedServiceType || !selectedDate || !selectedTime || !centerId) {
       Alert.alert(t('common.error'), t('common.retry'));
       return;
     }
-    try {
-      await createBooking({
-        centerId: Number(centerId),
+    router.push({
+      pathname: '/(app)/(tabs)/bookings/confirmation',
+      params: {
+        centerId: String(centerId),
         serviceType: selectedServiceType,
-        description: description || serviceTypes.find(s => s.value === selectedServiceType)?.label || '',
         scheduledDate: selectedDate,
         scheduledTime: selectedTime,
         paymentMethod: selectedPayment,
+        description: description || undefined,
         notes: notes || undefined,
-      }).unwrap();
-      Alert.alert(t('common.ok'), t('booking.bookingConfirmed') ?? 'Booking confirmed!', [
-        { text: t('common.ok'), onPress: () => router.replace('/(app)/(tabs)/bookings') },
-      ]);
-    } catch {
-      Alert.alert(t('common.error'), t('common.retry'));
-    }
+      },
+    });
   };
 
   const centerName = center ? (isRTL ? center.nameAr : center.nameEn) : '';

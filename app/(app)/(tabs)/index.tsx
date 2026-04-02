@@ -2,32 +2,36 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { FlatList, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import CenterCard from '../../../components/listings/CenterCard';
 import { AppText } from '../../../components/ui/AppText';
-import { useAppSelector } from '../../../store';
+import SearchBar from '../../../components/ui/SearchBar';
 import { useGetCategoriesQuery, useGetCentersQuery } from '../../../store/api/centersApi';
+import { useGetMyProfileQuery } from '../../../store/api/profileApi';
 
 export default function HomeScreen() {
   const { t, i18n } = useTranslation();
   const router = useRouter();
   const isRTL = i18n.dir() === 'rtl';
 
-  const { user } = useAppSelector((state) => state.auth);
-
+  const { data: profile } = useGetMyProfileQuery();
   const { data: categoriesData } = useGetCategoriesQuery();
   const { data: featuredCentersData } = useGetCentersQuery({
     page: 0,
-    size: 5,
+    size: 10,
     sortBy: 'rating',
     sortOrder: 'desc',
   });
   const { data: nearbyCentersData } = useGetCentersQuery({
     page: 0,
     size: 5,
-    sortBy: 'distance',
-    sortOrder: 'asc',
+    sortBy: 'reviews',
+    sortOrder: 'desc',
   });
+
+  const handleSearchPress = () => {
+    router.push('/(app)/search');
+  };
 
   const handleCategoryPress = (categoryId: number) => {
     router.push({
@@ -49,7 +53,7 @@ export default function HomeScreen() {
       <View style={styles.header}>
         <View style={styles.headerLeft}>
           <AppText style={styles.welcome}>
-            {t('home.welcome', { name: user?.firstname || t('common.loading') })}
+            {t('home.greeting', { name: profile?.firstname || t('common.loading') })}
           </AppText>
           <AppText style={styles.subtitle}>{t('home.title')}</AppText>
         </View>
@@ -58,6 +62,19 @@ export default function HomeScreen() {
           onPress={() => router.push('/(app)/(tabs)/notifications')}
         >
           <Ionicons name="notifications-outline" size={24} color="#1A1A2E" />
+        </TouchableOpacity>
+      </View>
+
+      {/* Search Bar */}
+      <View style={styles.searchContainer}>
+        <TouchableOpacity onPress={handleSearchPress} activeOpacity={0.7}>
+          <SearchBar
+            value=""
+            onChangeText={() => {}}
+            placeholder={t('search.placeholder')}
+            editable={false}
+            showClearButton={false}
+          />
         </TouchableOpacity>
       </View>
 
@@ -98,19 +115,23 @@ export default function HomeScreen() {
             <AppText style={styles.seeAll}>{t('home.seeAll')}</AppText>
           </TouchableOpacity>
         </View>
-        {featuredCentersData?.content && featuredCentersData.content.length > 0 ? (
-          featuredCentersData.content.map((center) => (
-            <CenterCard key={center.id} center={center} />
-          ))
-        ) : (
-          <View style={styles.emptyContainer}>
-            <Ionicons name="business-outline" size={48} color="#9E9E9E" />
-            <AppText style={styles.emptyText}>{t('home.noCenters')}</AppText>
-            <AppText style={styles.emptySubtext}>
-              {t('home.noCentersMessage')}
-            </AppText>
-          </View>
-        )}
+        <FlatList
+          data={featuredCentersData?.content || []}
+          renderItem={({ item }) => <CenterCard center={item} />}
+          keyExtractor={(item) => item.id.toString()}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.horizontalListContent}
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <Ionicons name="business-outline" size={48} color="#9E9E9E" />
+              <AppText style={styles.emptyText}>{t('home.noCenters')}</AppText>
+              <AppText style={styles.emptySubtext}>
+                {t('home.noCentersMessage')}
+              </AppText>
+            </View>
+          }
+        />
       </View>
 
       {/* Nearby Centers */}
@@ -172,9 +193,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F5F5',
     borderRadius: 20,
   },
+  searchContainer: {
+    paddingHorizontal: 20,
+    paddingTop: 16,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
+  },
   section: {
     marginTop: 20,
     paddingHorizontal: 20,
+  },
+  horizontalListContent: {
+    paddingRight: 8,
   },
   sectionHeader: {
     flexDirection: 'row',

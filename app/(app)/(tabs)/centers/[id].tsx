@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, Image, Modal, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, FlatList, Image, Modal, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import ReviewCard from '../../../../components/listings/ReviewCard';
 import { AppText } from '../../../../components/ui/AppText';
 import RatingStars from '../../../../components/ui/RatingStars';
@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from '../../../../store';
 import { useGetCenterByIdQuery } from '../../../../store/api/centersApi';
 import { useCreateConversationMutation } from '../../../../store/api/chatApi';
 import { useAddFavoriteMutation, useRemoveFavoriteMutation } from '../../../../store/api/favoritesApi';
+import { useGetCenterReviewsQuery, useCreateReviewMutation } from '../../../../store/api/reviewsApi';
 import { addToFavorites, removeFromFavorites, selectIsFavorite } from '../../../../store/favoritesSlice';
 
 export default function CenterDetailScreen() {
@@ -32,6 +33,7 @@ export default function CenterDetailScreen() {
   const [reviewRating, setReviewRating] = useState(0);
   const [reviewComment, setReviewComment] = useState('');
   const [createConversation, { isLoading: creatingConversation }] = useCreateConversationMutation();
+  const [createReview, { isLoading: creatingReview }] = useCreateReviewMutation();
 
   const handleFavoriteToggle = async () => {
     try {
@@ -219,29 +221,58 @@ export default function CenterDetailScreen() {
 
         {/* Reviews */}
         <View style={styles.reviewsSection}>
-          <AppText style={styles.sectionTitle}>{t('center.reviews')}</AppText>
+          <View style={styles.reviewsHeader}>
+            <AppText style={styles.sectionTitle}>{t('center.reviews')}</AppText>
+            {reviewsData && reviewsData.content.length > 0 && (
+              <TouchableOpacity
+                onPress={() => router.push(`/(app)/(tabs)/centers/reviews?id=${centerId}`)}
+              >
+                <AppText style={styles.seeAllReviews}>{t('center.seeAllReviews')}</AppText>
+              </TouchableOpacity>
+            )}
+          </View>
           {reviewsData && reviewsData.content.length > 0 ? (
-            <FlatList
-              data={reviewsData.content}
-              renderItem={({ item }) => (
-                <ReviewCard
-                  key={item.id}
-                  rating={item.rating}
-                  comment={item.comment}
-                  userFirstname={item.userFirstname}
-                  userLastname={item.userLastname}
-                  date={item.createdAt}
-                />
+            <>
+              <FlatList
+                data={reviewsData.content.slice(0, 3)}
+                renderItem={({ item }) => (
+                  <ReviewCard
+                    key={item.id}
+                    rating={item.rating}
+                    comment={item.comment}
+                    userFirstname={item.userFirstname}
+                    userLastname={item.userLastname}
+                    date={item.createdAt}
+                  />
+                )}
+                keyExtractor={(item) => item.id.toString()}
+                showsVerticalScrollIndicator={false}
+                scrollEnabled={false}
+                contentContainerStyle={styles.reviewsListContent}
+              />
+              {reviewsData.content.length > 3 && (
+                <TouchableOpacity
+                  style={styles.loadMoreReviews}
+                  onPress={() => router.push(`/(app)/(tabs)/centers/reviews?id=${centerId}`)}
+                >
+                  <AppText style={styles.loadMoreReviewsText}>
+                    {t('center.viewAllReviews', { count: reviewsData.content.length })}
+                  </AppText>
+                  <Ionicons name="chevron-forward" size={20} color="#2196F3" />
+                </TouchableOpacity>
               )}
-              keyExtractor={(item) => item.id.toString()}
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={styles.reviewsListContent}
-            />
+            </>
           ) : (
             <View style={styles.noReviewsContainer}>
               <Ionicons name="star-outline" size={48} color="#9E9E9E" />
               <AppText style={styles.noReviewsText}>{t('center.noReviews')}</AppText>
               <AppText style={styles.noReviewsSubtext}>{t('center.beFirstToReview')}</AppText>
+              <TouchableOpacity
+                style={styles.writeFirstReviewButton}
+                onPress={handleWriteReview}
+              >
+                <AppText style={styles.writeFirstReviewButtonText}>{t('review.writeReview')}</AppText>
+              </TouchableOpacity>
             </View>
           )}
         </View>
@@ -406,11 +437,21 @@ const styles = StyleSheet.create({
   reviewsSection: {
     marginTop: 24,
   },
+  reviewsHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
   sectionTitle: {
     fontSize: 16,
     fontWeight: '600',
     color: '#1A1A2E',
-    marginBottom: 12,
+  },
+  seeAllReviews: {
+    fontSize: 14,
+    color: '#2196F3',
+    fontWeight: '500',
   },
   ratingRow: {
     flexDirection: 'row',
@@ -436,9 +477,34 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#757575',
     marginTop: 4,
+    marginBottom: 16,
+  },
+  writeFirstReviewButton: {
+    backgroundColor: '#2196F3',
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 8,
+  },
+  writeFirstReviewButtonText: {
+    fontSize: 14,
+    color: '#fff',
+    fontWeight: '600',
   },
   reviewsListContent: {
     paddingBottom: 20,
+  },
+  loadMoreReviews: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    marginTop: 8,
+  },
+  loadMoreReviewsText: {
+    fontSize: 14,
+    color: '#2196F3',
+    fontWeight: '500',
+    marginRight: 4,
   },
   modalContainer: {
     backgroundColor: '#fff',

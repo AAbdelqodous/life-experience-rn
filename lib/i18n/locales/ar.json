@@ -59,6 +59,7 @@
     }
   },
   "home": {
+    "greeting": "مرحباً، {{name}}!",
     "welcome": "مرحباً، {{name}}!",
     "logout": "تسجيل الخروج",
     "title": "الرئيسية",
@@ -126,7 +127,9 @@
     "allReviews": "جميع التقييمات",
     "viewOnMap": "عرض على الخريطة",
     "averageRating": "متوسط التقييم",
-    "rating": "التقييم"
+    "rating": "التقييم",
+    "seeAllReviews": "عرض كل التقييمات",
+    "viewAllReviews": "عرض جميع التقييمات ({{count}})"
   },
   "booking": {
     "title": "حجز خدمة",
@@ -184,7 +187,19 @@
       "confirm": "التأكيد"
     },
     "bookingConfirmed": "تم تأكيد حجزك!",
-    "price": "السعر النهائي"
+    "price": "السعر النهائي",
+    "confirmation": "تأكيد الحجز",
+    "confirmationSubtitle": "يرجى مراجعة تفاصيل حجزك قبل التأكيد.",
+    "appointment": "الموعد",
+    "editDetails": "تعديل التفاصيل",
+    "termsAndConditions": "بتأكيد هذا الحجز، أنت توافق على شروطنا وأحكامنا.",
+    "bookingNumber": "رقم الحجز",
+    "bookingConfirmedMessage": "تم تقديم حجزك بنجاح. ستتلقى تأكيداً قريباً.",
+    "confirmationEmail": "تم إرسال تأكيد.",
+    "reminderNotification": "سيتم تذكيرك قبل موعدك.",
+    "viewBooking": "عرض حجوزاتي",
+    "bookAnother": "حجز خدمة أخرى",
+    "shareBooking": "مشاركة الحجز"
   },
   "review": {
     "title": "اكتب تقييم",

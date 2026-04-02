@@ -1,14 +1,14 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import CenterCard from '../../components/listings/CenterCard';
 import { AppText } from '../../components/ui/AppText';
 import SearchBar from '../../components/ui/SearchBar';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { useLazySearchCentersQuery } from '../../store/api/centersApi';
-import { addRecentSearch, clearRecentSearches } from '../../store/centersSlice';
+import { addRecentSearch, clearRecentSearches, removeRecentSearch } from '../../store/centersSlice';
 
 export default function SearchScreen() {
   const { t, i18n } = useTranslation();
@@ -19,12 +19,30 @@ export default function SearchScreen() {
   const recentSearches = useAppSelector((state: any) => state.centers.recentSearches);
 
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedQuery, setDebouncedQuery] = useState('');
   const [hasSearched, setHasSearched] = useState(false);
 
   const [searchCenters, { data: searchResults, isLoading, isUninitialized }] = useLazySearchCentersQuery();
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(searchQuery);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  useEffect(() => {
+    if (debouncedQuery.length >= 2) {
+      searchCenters({ query: debouncedQuery, params: { page: 0, size: 20 } });
+      setHasSearched(true);
+    } else {
+      setHasSearched(false);
+    }
+  }, [debouncedQuery, searchCenters]);
+
   const handleSearch = () => {
-    if (searchQuery.trim()) {
+    if (searchQuery.trim() && searchQuery.trim().length >= 2) {
       dispatch(addRecentSearch(searchQuery.trim()));
       searchCenters({ query: searchQuery.trim(), params: { page: 0, size: 20 } });
       setHasSearched(true);
@@ -37,9 +55,11 @@ export default function SearchScreen() {
 
   const handleRecentSearchPress = (query: string) => {
     setSearchQuery(query);
-    dispatch(addRecentSearch(query));
-    searchCenters({ query, params: { page: 0, size: 20 } });
     setHasSearched(true);
+  };
+
+  const handleRemoveRecentSearch = (query: string) => {
+    dispatch(removeRecentSearch(query));
   };
 
   const handleCenterPress = (centerId: number) => {
@@ -76,9 +96,8 @@ export default function SearchScreen() {
       <Ionicons name="time-outline" size={20} color="#757575" />
       <AppText style={styles.recentSearchText}>{search}</AppText>
       <TouchableOpacity
-        onPress={() => {
-          // Handle remove recent search
-        }}
+        onPress={() => handleRemoveRecentSearch(search)}
+        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
       >
         <Ionicons name="close-outline" size={20} color="#9E9E9E" />
       </TouchableOpacity>
@@ -120,23 +139,31 @@ export default function SearchScreen() {
 
       {/* Search Results */}
       {hasSearched && (
-        <FlatList
-          data={searchResults?.content || []}
-          renderItem={renderSearchResult}
-          keyExtractor={(item) => item.id.toString()}
-          ListEmptyComponent={renderEmpty}
-          contentContainerStyle={[
-            styles.listContent,
-            searchResults?.content?.length === 0 && styles.listContentEmpty,
-          ]}
-          showsVerticalScrollIndicator={false}
-          refreshing={isLoading}
-          onRefresh={() => {
-            if (searchQuery.trim()) {
-              searchCenters({ query: searchQuery.trim(), params: { page: 0, size: 20 } });
-            }
-          }}
-        />
+        <>
+          {isLoading && isUninitialized ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#2196F3" />
+            </View>
+          ) : (
+            <FlatList
+              data={searchResults?.content || []}
+              renderItem={renderSearchResult}
+              keyExtractor={(item) => item.id.toString()}
+              ListEmptyComponent={renderEmpty}
+              contentContainerStyle={[
+                styles.listContent,
+                searchResults?.content?.length === 0 && styles.listContentEmpty,
+              ]}
+              showsVerticalScrollIndicator={false}
+              refreshing={isLoading}
+              onRefresh={() => {
+                if (searchQuery.trim() && searchQuery.trim().length >= 2) {
+                  searchCenters({ query: searchQuery.trim(), params: { page: 0, size: 20 } });
+                }
+              }}
+            />
+          )}
+        </>
       )}
 
       {/* Empty State (No Recent Searches) */}
@@ -213,6 +240,12 @@ const styles = StyleSheet.create({
   },
   listContentEmpty: {
     flex: 1,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 40,
   },
   emptyContainer: {
     alignItems: 'center',
