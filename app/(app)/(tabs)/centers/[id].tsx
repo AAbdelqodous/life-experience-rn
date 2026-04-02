@@ -7,7 +7,10 @@ import ReviewCard from '../../../../components/listings/ReviewCard';
 import { AppText } from '../../../../components/ui/AppText';
 import RatingStars from '../../../../components/ui/RatingStars';
 import { useAppDispatch, useAppSelector } from '../../../../store';
+import { API_BASE_URL } from '../../../../lib/constants/config';
 import { useGetCenterByIdQuery } from '../../../../store/api/centersApi';
+
+const SERVER_URL = API_BASE_URL.replace('/api/v1', '');
 import { useCreateConversationMutation } from '../../../../store/api/chatApi';
 import { useAddFavoriteMutation, useRemoveFavoriteMutation } from '../../../../store/api/favoritesApi';
 import { useGetCenterReviewsQuery, useCreateReviewMutation } from '../../../../store/api/reviewsApi';
@@ -126,9 +129,12 @@ export default function CenterDetailScreen() {
         ) : (
           <>
             {/* Center Image */}
-            {center?.imageUrl && (
+            {center?.imageUrls && center.imageUrls.length > 0 && (
               <View style={styles.imageContainer}>
-                <Image source={{ uri: center.imageUrl }} style={styles.centerImage} />
+                <Image
+                  source={{ uri: center.imageUrls[0].startsWith('http') ? center.imageUrls[0] : `${SERVER_URL}${center.imageUrls[0]}` }}
+                  style={styles.centerImage}
+                />
               </View>
             )}
 

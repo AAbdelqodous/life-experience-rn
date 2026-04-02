@@ -42,7 +42,7 @@ export interface MaintenanceCenter {
   longitude?: number;
   distance?: number;
   categories: ServiceCategory[];
-  imageUrl?: string;
+  imageUrls?: string[];
   createdAt: string;
   updatedAt: string;
 }

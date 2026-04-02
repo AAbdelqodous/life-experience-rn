@@ -2,9 +2,12 @@ import { useRouter } from 'expo-router';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { API_BASE_URL } from '../../lib/constants/config';
 import { MaintenanceCenter } from '../../store/api/centersApi';
 import { AppText } from '../ui/AppText';
 import RatingStars from '../ui/RatingStars';
+
+const SERVER_URL = API_BASE_URL.replace('/api/v1', '');
 
 interface CenterCardProps {
   center: MaintenanceCenter;
@@ -31,8 +34,11 @@ export default function CenterCard({ center, isFavorite, onFavoriteToggle }: Cen
   return (
     <TouchableOpacity style={styles.container} onPress={handlePress} activeOpacity={0.7}>
       <View style={styles.imageContainer}>
-        {center.imageUrl ? (
-          <Image source={{ uri: center.imageUrl }} style={styles.image} />
+        {center.imageUrls && center.imageUrls.length > 0 ? (
+          <Image
+            source={{ uri: center.imageUrls[0].startsWith('http') ? center.imageUrls[0] : `${SERVER_URL}${center.imageUrls[0]}` }}
+            style={styles.image}
+          />
         ) : (
           <View style={[styles.image, styles.placeholder]}>
             <AppText style={styles.placeholderText}>{name.charAt(0)}</AppText>
