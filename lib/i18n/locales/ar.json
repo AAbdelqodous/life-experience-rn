@@ -139,6 +139,8 @@
     "selectTime": "اختر الوقت",
     "description": "الوصف",
     "descriptionPlaceholder": "صف مشكلتك أو الخدمة المطلوبة...",
+    "phone": "رقم التواصل",
+    "phoneRequired": "الرجاء إدخال رقم هاتفك للتواصل",
     "notes": "ملاحظات إضافية",
     "notesPlaceholder": "أي تفاصيل إضافية...",
     "paymentMethodLabel": "طريقة الدفع",

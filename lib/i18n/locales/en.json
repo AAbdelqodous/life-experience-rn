@@ -139,6 +139,8 @@
     "selectTime": "Select Time",
     "description": "Description",
     "descriptionPlaceholder": "Describe your issue or service needed...",
+    "phone": "Contact Phone",
+    "phoneRequired": "Please enter your contact phone number",
     "notes": "Additional Notes",
     "notesPlaceholder": "Any additional details...",
     "paymentMethodLabel": "Payment Method",

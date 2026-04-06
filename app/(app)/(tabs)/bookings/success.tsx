@@ -43,7 +43,7 @@ export default function BookingSuccessScreen() {
           <View style={styles.confettiContainer}>
             <Ionicons name="star" size={30} color="#FFD700" style={styles.confetti1} />
             <Ionicons name="star" size={24} color="#FFC107" style={styles.confetti2} />
-            <Ionicons name="star" size="20" color="#FF9800" style={styles.confetti3} />
+            <Ionicons name="star" size={20} color="#FF9800" style={styles.confetti3} />
           </View>
         </View>
 

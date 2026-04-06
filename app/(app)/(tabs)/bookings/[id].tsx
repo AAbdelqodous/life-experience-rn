@@ -105,15 +105,15 @@ export default function BookingDetailScreen() {
     );
   }
 
-  const centerName = isRTL ? booking.centerNameAr : booking.centerNameEn;
-  const canCancel = booking.status === BookingStatus.PENDING || booking.status === BookingStatus.CONFIRMED;
+  const centerName = booking.centerName;
+  const canCancel = booking.bookingStatus === BookingStatus.PENDING || booking.bookingStatus === BookingStatus.CONFIRMED;
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       {/* Status Banner */}
-      <View style={[styles.statusBanner, { backgroundColor: getStatusColor(booking.status) }]}>
+      <View style={[styles.statusBanner, { backgroundColor: getStatusColor(booking.bookingStatus) }]}>
         <AppText style={styles.statusText}>
-          {t(`booking.status.${booking.status.toLowerCase()}`)}
+          {t(`booking.status.${booking.bookingStatus.toLowerCase()}`)}
         </AppText>
       </View>
 
@@ -150,33 +150,33 @@ export default function BookingDetailScreen() {
             <View style={styles.infoRow}>
               <Ionicons name="calendar-outline" size={20} color="#2196F3" />
               <AppText style={styles.infoLabel}>{t('booking.date')}</AppText>
-              <AppText style={styles.infoValue}>{formatDate(booking.scheduledDate)}</AppText>
+              <AppText style={styles.infoValue}>{formatDate(booking.bookingDate)}</AppText>
             </View>
             <View style={styles.divider} />
             <View style={styles.infoRow}>
               <Ionicons name="time-outline" size={20} color="#2196F3" />
               <AppText style={styles.infoLabel}>{t('booking.time')}</AppText>
-              <AppText style={styles.infoValue}>{booking.scheduledTime}</AppText>
+              <AppText style={styles.infoValue}>{booking.bookingTime}</AppText>
             </View>
           </View>
         </View>
 
         {/* Description */}
-        {booking.description && (
+        {booking.serviceDescription && (
           <View style={styles.section}>
             <AppText style={styles.sectionTitle}>{t('booking.description')}</AppText>
             <View style={styles.descriptionCard}>
-              <AppText style={styles.description}>{booking.description}</AppText>
+              <AppText style={styles.description}>{booking.serviceDescription}</AppText>
             </View>
           </View>
         )}
 
         {/* Notes */}
-        {booking.notes && (
+        {booking.specialInstructions && (
           <View style={styles.section}>
             <AppText style={styles.sectionTitle}>{t('booking.notes')}</AppText>
             <View style={styles.notesCard}>
-              <AppText style={styles.notes}>{booking.notes}</AppText>
+              <AppText style={styles.notes}>{booking.specialInstructions}</AppText>
             </View>
           </View>
         )}
@@ -189,27 +189,27 @@ export default function BookingDetailScreen() {
               <AppText style={styles.paymentLabel}>{t('booking.paymentMethodLabel')}</AppText>
               <AppText style={styles.paymentValue}>{getPaymentMethodLabel(booking.paymentMethod)}</AppText>
             </View>
-            {booking.estimatedPrice && (
+            {booking.estimatedCost && (
               <View style={styles.paymentRow}>
                 <AppText style={styles.paymentLabel}>{t('booking.estimatedPrice')}</AppText>
-                <AppText style={styles.price}>KD {booking.estimatedPrice.toFixed(3)}</AppText>
+                <AppText style={styles.price}>KD {booking.estimatedCost.toFixed(3)}</AppText>
               </View>
             )}
-            {booking.actualPrice && (
+            {booking.finalCost && (
               <View style={styles.paymentRow}>
                 <AppText style={styles.paymentLabel}>{t('booking.price')}</AppText>
-                <AppText style={styles.price}>KD {booking.actualPrice.toFixed(3)}</AppText>
+                <AppText style={styles.price}>KD {booking.finalCost.toFixed(3)}</AppText>
               </View>
             )}
           </View>
         </View>
 
         {/* Cancellation Info */}
-        {booking.cancellationReason && (
+        {booking.cancelledReason && (
           <View style={styles.section}>
             <AppText style={styles.sectionTitle}>{t('booking.cancelReason')}</AppText>
             <View style={styles.cancellationCard}>
-              <AppText style={styles.cancellationReason}>{booking.cancellationReason}</AppText>
+              <AppText style={styles.cancellationReason}>{booking.cancelledReason}</AppText>
             </View>
           </View>
         )}
@@ -245,7 +245,7 @@ export default function BookingDetailScreen() {
               style={[styles.actionButton, styles.cancelButton] as any}
             />
           )}
-          {(booking.status === 'COMPLETED' || booking.status === 'CANCELLED') && (
+          {(booking.bookingStatus === BookingStatus.COMPLETED || booking.bookingStatus === BookingStatus.CANCELLED) && (
             <AppButton
               title={t('complaint.fileComplaint')}
               onPress={() => {
@@ -254,8 +254,7 @@ export default function BookingDetailScreen() {
                   params: {
                     bookingId: String(booking.id),
                     centerId: String(booking.centerId),
-                    centerNameAr: booking.centerNameAr,
-                    centerNameEn: booking.centerNameEn,
+                    centerName: booking.centerName,
                   },
                 });
               }}

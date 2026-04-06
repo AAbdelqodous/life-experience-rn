@@ -40,22 +40,22 @@ export enum CancelledBy {
 
 export interface Booking {
   id: number;
+  bookingNumber?: string;
   userId: number;
   centerId: number;
-  centerNameAr: string;
-  centerNameEn: string;
+  centerName: string;
   serviceType: ServiceType;
-  description: string;
-  scheduledDate: string;
-  scheduledTime: string;
-  status: BookingStatus;
+  serviceDescription?: string;
+  bookingDate: string;
+  bookingTime: string;
+  bookingStatus: BookingStatus;
   paymentMethod: PaymentMethod;
   paymentStatus: PaymentStatus;
-  estimatedPrice?: number;
-  actualPrice?: number;
-  notes?: string;
+  estimatedCost?: number;
+  finalCost?: number;
+  specialInstructions?: string;
   cancelledBy?: CancelledBy;
-  cancellationReason?: string;
+  cancelledReason?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -63,11 +63,12 @@ export interface Booking {
 export interface CreateBookingRequest {
   centerId: number;
   serviceType: ServiceType;
-  description: string;
-  scheduledDate: string;
-  scheduledTime: string;
+  serviceDescription?: string;
+  bookingDate: string;
+  bookingTime: string;
   paymentMethod: PaymentMethod;
-  notes?: string;
+  customerPhone: string;
+  specialInstructions?: string;
 }
 
 export interface UpdateBookingRequest {
@@ -81,9 +82,12 @@ export interface CancelBookingRequest {
 }
 
 export interface BookingsQueryParams {
+  status?: BookingStatus;
+}
+
+export interface BookingsPageParams {
   page?: number;
   size?: number;
-  status?: BookingStatus;
   serviceType?: ServiceType;
   centerId?: number;
   sortBy?: 'date' | 'status' | 'price';
@@ -115,7 +119,7 @@ export const bookingsApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getMyBookings: builder.query<BookingsResponse, BookingsQueryParams>({
+    getMyBookings: builder.query<Booking[], BookingsQueryParams>({
       query: (params) => ({
         url: '/bookings/my',
         params,

@@ -11,11 +11,12 @@ import { useGetCenterByIdQuery } from '../../../../store/api/centersApi';
 interface BookingSummary {
   centerId: number;
   serviceType: ServiceType;
-  scheduledDate: string;
-  scheduledTime: string;
+  bookingDate: string;
+  bookingTime: string;
   paymentMethod: PaymentMethod;
-  description?: string;
-  notes?: string;
+  customerPhone: string;
+  serviceDescription?: string;
+  specialInstructions?: string;
 }
 
 export default function BookingConfirmationScreen() {
@@ -27,11 +28,12 @@ export default function BookingConfirmationScreen() {
   const bookingData: BookingSummary = {
     centerId: Number(params.centerId),
     serviceType: params.serviceType as ServiceType,
-    scheduledDate: params.scheduledDate as string,
-    scheduledTime: params.scheduledTime as string,
+    bookingDate: params.bookingDate as string,
+    bookingTime: params.bookingTime as string,
     paymentMethod: params.paymentMethod as PaymentMethod,
-    description: params.description as string | undefined,
-    notes: params.notes as string | undefined,
+    customerPhone: params.customerPhone as string,
+    serviceDescription: params.serviceDescription as string || undefined,
+    specialInstructions: params.specialInstructions as string || undefined,
   };
 
   const { data: center } = useGetCenterByIdQuery(bookingData.centerId);
@@ -58,23 +60,25 @@ export default function BookingConfirmationScreen() {
       const result = await createBooking({
         centerId: bookingData.centerId,
         serviceType: bookingData.serviceType,
-        description: bookingData.description || serviceTypes[bookingData.serviceType],
-        scheduledDate: bookingData.scheduledDate,
-        scheduledTime: bookingData.scheduledTime,
+        serviceDescription: bookingData.serviceDescription || serviceTypes[bookingData.serviceType],
+        bookingDate: bookingData.bookingDate,
+        bookingTime: bookingData.bookingTime,
         paymentMethod: bookingData.paymentMethod,
-        notes: bookingData.notes,
+        customerPhone: bookingData.customerPhone,
+        specialInstructions: bookingData.specialInstructions,
       }).unwrap();
 
       router.push({
         pathname: '/(app)/(tabs)/bookings/success',
         params: {
           bookingId: String(result.id),
-          bookingNumber: result.bookingNumber,
+          bookingNumber: result.bookingNumber ?? String(result.id),
           centerName: centerName,
         },
       });
-    } catch {
-      Alert.alert(t('common.error'), t('common.retry'));
+    } catch (err: any) {
+      const message = err?.data?.error || err?.data?.businessErrorDescription || t('common.retry');
+      Alert.alert(t('common.error'), message);
     }
   };
 
@@ -110,10 +114,10 @@ export default function BookingConfirmationScreen() {
               <AppText style={styles.cardValue}>{serviceTypes[bookingData.serviceType]}</AppText>
             </View>
           </View>
-          {bookingData.description && (
+          {bookingData.serviceDescription && (
             <View style={styles.section}>
               <AppText style={styles.sectionLabel}>{t('booking.description')}</AppText>
-              <AppText style={styles.sectionValue}>{bookingData.description}</AppText>
+              <AppText style={styles.sectionValue}>{bookingData.serviceDescription}</AppText>
             </View>
           )}
         </View>
@@ -129,11 +133,11 @@ export default function BookingConfirmationScreen() {
           </View>
           <View style={styles.section}>
             <AppText style={styles.sectionLabel}>{t('booking.date')}</AppText>
-            <AppText style={styles.sectionValue}>{bookingData.scheduledDate}</AppText>
+            <AppText style={styles.sectionValue}>{bookingData.bookingDate}</AppText>
           </View>
           <View style={styles.section}>
             <AppText style={styles.sectionLabel}>{t('booking.time')}</AppText>
-            <AppText style={styles.sectionValue}>{bookingData.scheduledTime}</AppText>
+            <AppText style={styles.sectionValue}>{bookingData.bookingTime}</AppText>
           </View>
         </View>
 
@@ -149,7 +153,7 @@ export default function BookingConfirmationScreen() {
           </View>
         </View>
 
-        {bookingData.notes && (
+        {bookingData.specialInstructions && (
           <View style={styles.card}>
             <View style={styles.cardHeader}>
               <View style={[styles.iconContainer, { backgroundColor: '#E3F2FD' }]}>
@@ -159,7 +163,7 @@ export default function BookingConfirmationScreen() {
                 <AppText style={styles.cardTitle}>{t('booking.notes')}</AppText>
               </View>
             </View>
-            <AppText style={styles.notesValue}>{bookingData.notes}</AppText>
+            <AppText style={styles.notesValue}>{bookingData.specialInstructions}</AppText>
           </View>
         )}
 

@@ -14,7 +14,7 @@ export default function BookingCard({ booking }: BookingCardProps) {
   const router = useRouter();
   const isRTL = i18n.dir() === 'rtl';
 
-  const centerName = isRTL ? booking.centerNameAr : booking.centerNameEn;
+  const centerName = booking.centerName;
 
   const getStatusColor = (status: BookingStatus) => {
     switch (status) {
@@ -75,11 +75,11 @@ export default function BookingCard({ booking }: BookingCardProps) {
         <View
           style={[
             styles.statusBadge,
-            { backgroundColor: getStatusColor(booking.status) },
+            { backgroundColor: getStatusColor(booking.bookingStatus) },
           ]}
         >
           <AppText style={styles.statusText}>
-            {t(`booking.status.${booking.status.toLowerCase()}`)}
+            {t(`booking.status.${booking.bookingStatus.toLowerCase()}`)}
           </AppText>
         </View>
       </View>
@@ -88,20 +88,20 @@ export default function BookingCard({ booking }: BookingCardProps) {
         <View style={styles.row}>
           <AppText style={styles.label}>{t('booking.date')}</AppText>
           <AppText style={styles.value}>
-            {formatDate(booking.scheduledDate)} at {booking.scheduledTime}
+            {formatDate(booking.bookingDate)} at {booking.bookingTime}
           </AppText>
         </View>
         <View style={styles.row}>
           <AppText style={styles.label}>{t('booking.description')}</AppText>
           <AppText style={styles.value} numberOfLines={2}>
-            {booking.description}
+            {booking.serviceDescription}
           </AppText>
         </View>
-        {booking.estimatedPrice && (
+        {booking.estimatedCost && (
           <View style={styles.row}>
             <AppText style={styles.label}>{t('booking.estimatedPrice')}</AppText>
             <AppText style={styles.price}>
-              KD {booking.estimatedPrice.toFixed(3)}
+              KD {booking.estimatedCost.toFixed(3)}
             </AppText>
           </View>
         )}

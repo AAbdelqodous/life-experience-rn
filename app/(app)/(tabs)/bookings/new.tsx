@@ -33,6 +33,7 @@ export default function NewBookingScreen() {
   const [selectedPayment, setSelectedPayment] = useState<PaymentMethod>(PaymentMethod.CASH);
   const [description, setDescription] = useState('');
   const [notes, setNotes] = useState('');
+  const [customerPhone, setCustomerPhone] = useState('');
 
   const { data: center, isLoading: centerLoading } = useGetCenterByIdQuery(
     Number(centerId),
@@ -98,16 +99,21 @@ export default function NewBookingScreen() {
       Alert.alert(t('common.error'), t('common.retry'));
       return;
     }
+    if (!customerPhone.trim()) {
+      Alert.alert(t('common.error'), t('booking.phoneRequired'));
+      return;
+    }
     router.push({
       pathname: '/(app)/(tabs)/bookings/confirmation',
       params: {
         centerId: String(centerId),
         serviceType: selectedServiceType,
-        scheduledDate: selectedDate,
-        scheduledTime: selectedTime,
+        bookingDate: selectedDate,
+        bookingTime: selectedTime,
         paymentMethod: selectedPayment,
-        description: description || undefined,
-        notes: notes || undefined,
+        customerPhone: customerPhone.trim(),
+        serviceDescription: description || '',
+        specialInstructions: notes || '',
       },
     });
   };
@@ -273,6 +279,18 @@ export default function NewBookingScreen() {
                 )}
               </TouchableOpacity>
             ))}
+
+            {/* Phone */}
+            <View style={styles.inputGroup}>
+              <AppText style={styles.inputLabel}>{t('booking.phone')} *</AppText>
+              <TextInput
+                style={styles.textInput}
+                value={customerPhone}
+                onChangeText={setCustomerPhone}
+                placeholder="+965 XXXX XXXX"
+                keyboardType="phone-pad"
+              />
+            </View>
 
             {/* Notes */}
             <View style={styles.inputGroup}>

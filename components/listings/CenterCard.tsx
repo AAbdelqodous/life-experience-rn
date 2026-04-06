@@ -76,7 +76,7 @@ export default function CenterCard({ center, isFavorite, onFavoriteToggle }: Cen
         </View>
         <View style={styles.infoRow}>
           <AppText style={styles.location}>
-            {center.address.city}, {center.address.area}
+            {[center.address?.city, center.address?.area].filter(Boolean).join(', ')}
           </AppText>
           {center.distance !== undefined && (
             <AppText style={styles.distance}>{center.distance.toFixed(1)} km</AppText>

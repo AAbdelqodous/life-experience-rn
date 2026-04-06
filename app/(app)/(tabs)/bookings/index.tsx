@@ -20,13 +20,7 @@ export default function BookingsScreen() {
   const [filterModalVisible, setFilterModalVisible] = useState(false);
 
   const { data: bookingsData, isLoading, refetch } = useGetMyBookingsQuery({
-    page: 0,
-    size: 20,
     status: filters.status,
-    serviceType: filters.serviceType,
-    centerId: filters.centerId,
-    sortBy: filters.sortBy,
-    sortOrder: filters.sortOrder,
   });
 
   const handleApplyFilters = (newFilters: Record<string, any>) => {
@@ -75,13 +69,13 @@ export default function BookingsScreen() {
 
       {/* Bookings List */}
       <FlatList
-        data={bookingsData?.content || []}
+        data={bookingsData || []}
         renderItem={renderBooking}
         keyExtractor={(item) => item.id.toString()}
         ListEmptyComponent={renderEmpty}
         contentContainerStyle={[
           styles.listContent,
-          bookingsData?.content?.length === 0 && styles.listContentEmpty,
+          (!bookingsData || bookingsData.length === 0) && styles.listContentEmpty,
         ]}
         showsVerticalScrollIndicator={false}
         refreshing={isLoading}
