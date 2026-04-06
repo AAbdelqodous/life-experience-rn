@@ -7,12 +7,10 @@ import ReviewCard from '../../../../components/listings/ReviewCard';
 import { AppText } from '../../../../components/ui/AppText';
 import RatingStars from '../../../../components/ui/RatingStars';
 import { API_BASE_URL } from '../../../../lib/constants/config';
-import { useAppDispatch, useAppSelector } from '../../../../store';
 import { useCreateConversationMutation } from '../../../../store/api/chatApi';
 import { useGetCenterByIdQuery } from '../../../../store/api/centersApi';
-import { useAddFavoriteMutation, useRemoveFavoriteMutation } from '../../../../store/api/favoritesApi';
+import { useAddFavoriteMutation, useIsFavoriteQuery, useRemoveFavoriteMutation } from '../../../../store/api/favoritesApi';
 import { useGetCenterReviewsQuery, useCreateReviewMutation } from '../../../../store/api/reviewsApi';
-import { addToFavorites, removeFromFavorites, selectIsFavorite } from '../../../../store/favoritesSlice';
 
 const SERVER_URL = API_BASE_URL.replace('/api/v1', '');
 
@@ -20,7 +18,6 @@ export default function CenterDetailScreen() {
   const { t, i18n } = useTranslation();
   const router = useRouter();
   const params = useLocalSearchParams();
-  const dispatch = useAppDispatch();
   const isRTL = i18n.dir() === 'rtl';
 
   const centerId = Number(params.id);
@@ -28,7 +25,8 @@ export default function CenterDetailScreen() {
   const { data: center, isLoading: centerLoading } = useGetCenterByIdQuery(centerId);
   const { data: reviewsData } = useGetCenterReviewsQuery({ centerId, page: 0, size: 10 });
 
-  const isFavorite = useAppSelector((state) => selectIsFavorite(state, centerId));
+  const { data: isFavoriteData, refetch: refetchIsFavorite } = useIsFavoriteQuery(centerId);
+  const isFavorite = isFavoriteData ?? false;
   const [addFavorite] = useAddFavoriteMutation();
   const [removeFavorite] = useRemoveFavoriteMutation();
   const [selectedTab, setSelectedTab] = useState<'about' | 'reviews'>('about');
@@ -42,13 +40,13 @@ export default function CenterDetailScreen() {
     try {
       if (isFavorite) {
         await removeFavorite(centerId).unwrap();
-        dispatch(removeFromFavorites(centerId));
       } else {
         await addFavorite(centerId).unwrap();
-        dispatch(addToFavorites(centerId));
       }
-    } catch (error) {
-      Alert.alert(t('common.error'), t('common.retry'));
+      refetchIsFavorite();
+    } catch (error: any) {
+      const message = error?.data?.error || error?.data?.businessErrorDescription || t('common.retry');
+      Alert.alert(t('common.error'), message);
     }
   };
 
@@ -244,11 +242,7 @@ export default function CenterDetailScreen() {
                 renderItem={({ item }) => (
                   <ReviewCard
                     key={item.id}
-                    rating={item.rating}
-                    comment={item.comment}
-                    userFirstname={item.userFirstname}
-                    userLastname={item.userLastname}
-                    date={item.createdAt}
+                    review={item}
                   />
                 )}
                 keyExtractor={(item) => item.id.toString()}

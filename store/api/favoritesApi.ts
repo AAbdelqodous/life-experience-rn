@@ -45,6 +45,7 @@ export interface FavoritesResponse {
 
 export const favoritesApi = createApi({
   reducerPath: 'favoritesApi',
+  tagTypes: ['Favorite'],
   baseQuery: fetchBaseQuery({
     baseUrl: API_BASE_URL,
     prepareHeaders: (headers, { getState }) => {
@@ -56,26 +57,27 @@ export const favoritesApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getMyFavorites: builder.query<FavoritesResponse, FavoritesQueryParams>({
-      query: (params) => ({
-        url: '/favorites/my',
-        params,
-      }),
+    getMyFavorites: builder.query<UserFavorite[], void>({
+      query: () => '/favorites/my',
+      providesTags: ['Favorite'],
     }),
 
     addFavorite: builder.mutation<UserFavorite, number>({
       query: (centerId) => ({
         url: '/favorites',
         method: 'POST',
-        body: { centerId },
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ centerId }),
       }),
+      invalidatesTags: ['Favorite'],
     }),
 
     removeFavorite: builder.mutation<void, number>({
       query: (centerId) => ({
-        url: `/favorites/${centerId}`,
+        url: `/favorites/center/${centerId}`,
         method: 'DELETE',
       }),
+      invalidatesTags: ['Favorite'],
     }),
 
     isFavorite: builder.query<boolean, number>({

@@ -19,12 +19,7 @@ export default function FavoritesScreen() {
   const filters = useAppSelector((state) => state.favorites.filters);
   const [filterModalVisible, setFilterModalVisible] = useState(false);
 
-  const { data: favoritesData, isLoading, refetch } = useGetMyFavoritesQuery({
-    page: 0,
-    size: 20,
-    sortBy: filters.sortBy,
-    sortOrder: filters.sortOrder,
-  });
+  const { data: favoritesData, isLoading, refetch } = useGetMyFavoritesQuery();
 
   const handleApplyFilters = (newFilters: Record<string, any>) => {
     dispatch(setFavoritesFilters(newFilters));
@@ -90,13 +85,13 @@ export default function FavoritesScreen() {
 
       {/* Favorites List */}
       <FlatList
-        data={favoritesData?.content || []}
+        data={favoritesData || []}
         renderItem={renderFavorite}
         keyExtractor={(item) => item.id.toString()}
         ListEmptyComponent={renderEmpty}
         contentContainerStyle={[
           styles.listContent,
-          favoritesData?.content?.length === 0 && styles.listContentEmpty,
+          (!favoritesData || favoritesData.length === 0) && styles.listContentEmpty,
         ]}
         showsVerticalScrollIndicator={false}
         refreshing={isLoading}

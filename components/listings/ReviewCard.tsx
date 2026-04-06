@@ -28,7 +28,7 @@ export default function ReviewCard({ review }: ReviewCardProps) {
         <View style={styles.userInfo}>
           <View style={styles.avatar}>
             <AppText style={styles.avatarText}>
-              {review.userFirstname.charAt(0).toUpperCase()}
+              {review.userFirstname?.charAt(0)?.toUpperCase() ?? '?'}
             </AppText>
           </View>
           <View style={styles.userDetails}>
