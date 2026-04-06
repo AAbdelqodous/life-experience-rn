@@ -1,20 +1,20 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, FlatList, Image, Modal, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, FlatList, Image, Modal, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import ReviewCard from '../../../../components/listings/ReviewCard';
 import { AppText } from '../../../../components/ui/AppText';
 import RatingStars from '../../../../components/ui/RatingStars';
-import { useAppDispatch, useAppSelector } from '../../../../store';
 import { API_BASE_URL } from '../../../../lib/constants/config';
-import { useGetCenterByIdQuery } from '../../../../store/api/centersApi';
-
-const SERVER_URL = API_BASE_URL.replace('/api/v1', '');
+import { useAppDispatch, useAppSelector } from '../../../../store';
 import { useCreateConversationMutation } from '../../../../store/api/chatApi';
+import { useGetCenterByIdQuery } from '../../../../store/api/centersApi';
 import { useAddFavoriteMutation, useRemoveFavoriteMutation } from '../../../../store/api/favoritesApi';
 import { useGetCenterReviewsQuery, useCreateReviewMutation } from '../../../../store/api/reviewsApi';
 import { addToFavorites, removeFromFavorites, selectIsFavorite } from '../../../../store/favoritesSlice';
+
+const SERVER_URL = API_BASE_URL.replace('/api/v1', '');
 
 export default function CenterDetailScreen() {
   const { t, i18n } = useTranslation();

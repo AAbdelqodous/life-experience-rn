@@ -34,7 +34,7 @@ export default function BookingsScreen() {
   };
 
   const handleNewBooking = () => {
-    router.push('/(app)/(tabs)/bookings/new');
+    router.push('/(app)/(tabs)/centers');
   };
 
   const renderBooking = ({ item }: { item: any }) => (

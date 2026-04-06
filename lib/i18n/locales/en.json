@@ -104,6 +104,8 @@
     }
   },
   "center": {
+    "name": "Center Name",
+    "navigate": "Get Directions",
     "details": "Center Details",
     "open": "Open",
     "closed": "Closed",
@@ -165,10 +167,17 @@
     "noBookings": "No bookings yet",
     "noBookingsMessage": "You haven't made any bookings yet.",
     "bookYourFirstService": "Book your first service now!",
+    "selectCenterFirst": "Please select a center first to make a booking.",
+    "browseCenters": "Browse Centers",
     "serviceType": {
-      "car": "Car",
-      "electronics": "Electronics",
-      "homeAppliance": "Home Appliance"
+      "repair": "Repair",
+      "maintenance": "Maintenance",
+      "inspection": "Inspection",
+      "installation": "Installation",
+      "consultation": "Consultation",
+      "emergency": "Emergency",
+      "warranty": "Warranty",
+      "other": "Other"
     },
     "status": {
       "pending": "Pending",
@@ -180,8 +189,13 @@
     },
     "paymentMethod": {
       "cash": "Cash",
-      "knet": "KNET",
-      "credit_card": "Credit Card"
+      "credit_card": "Credit Card",
+      "debit_card": "Debit Card",
+      "bank_transfer": "Bank Transfer",
+      "paypal": "PayPal",
+      "google_pay": "Google Pay",
+      "apple_pay": "Apple Pay",
+      "other": "Other"
     },
     "steps": {
       "service": "Service",
@@ -222,7 +236,10 @@
     "editReview": "Edit Review",
     "saveChanges": "Save Changes",
     "cancel": "Cancel",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "writeReview": "Write a Review",
+    "placeholder": "Share your experience...",
+    "ratingRequired": "Please select a rating before submitting"
   },
   "favorites": {
     "title": "Favorites",

@@ -14,15 +14,25 @@ export enum BookingStatus {
 }
 
 export enum ServiceType {
-  CAR = 'CAR',
-  ELECTRONICS = 'ELECTRONICS',
-  HOME_APPLIANCE = 'HOME_APPLIANCE',
+  REPAIR = 'REPAIR',
+  MAINTENANCE = 'MAINTENANCE',
+  INSPECTION = 'INSPECTION',
+  INSTALLATION = 'INSTALLATION',
+  CONSULTATION = 'CONSULTATION',
+  EMERGENCY = 'EMERGENCY',
+  WARRANTY = 'WARRANTY',
+  OTHER = 'OTHER',
 }
 
 export enum PaymentMethod {
   CASH = 'CASH',
-  KNET = 'KNET',
   CREDIT_CARD = 'CREDIT_CARD',
+  DEBIT_CARD = 'DEBIT_CARD',
+  BANK_TRANSFER = 'BANK_TRANSFER',
+  PAYPAL = 'PAYPAL',
+  GOOGLE_PAY = 'GOOGLE_PAY',
+  APPLE_PAY = 'APPLE_PAY',
+  OTHER = 'OTHER',
 }
 
 export enum PaymentStatus {
@@ -108,6 +118,7 @@ export interface BookingsResponse {
 
 export const bookingsApi = createApi({
   reducerPath: 'bookingsApi',
+  tagTypes: ['Booking'],
   baseQuery: fetchBaseQuery({
     baseUrl: API_BASE_URL,
     prepareHeaders: (headers, { getState }) => {
@@ -124,10 +135,12 @@ export const bookingsApi = createApi({
         url: '/bookings/my',
         params,
       }),
+      providesTags: ['Booking'],
     }),
 
     getBookingById: builder.query<Booking, number>({
       query: (id) => `/bookings/${id}`,
+      providesTags: (_result, _err, id) => [{ type: 'Booking', id }],
     }),
 
     createBooking: builder.mutation<Booking, CreateBookingRequest>({
@@ -136,6 +149,7 @@ export const bookingsApi = createApi({
         method: 'POST',
         body,
       }),
+      invalidatesTags: ['Booking'],
     }),
 
     updateBooking: builder.mutation<Booking, { id: number; data: UpdateBookingRequest }>({
@@ -144,6 +158,7 @@ export const bookingsApi = createApi({
         method: 'PATCH',
         body: data,
       }),
+      invalidatesTags: ['Booking'],
     }),
 
     cancelBooking: builder.mutation<void, { id: number; data: CancelBookingRequest }>({
@@ -152,6 +167,7 @@ export const bookingsApi = createApi({
         method: 'PATCH',
         body: data,
       }),
+      invalidatesTags: ['Booking'],
     }),
   }),
 });

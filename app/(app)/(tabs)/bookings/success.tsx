@@ -1,11 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { AppButton } from '../../../../components/ui/AppButton';
 import { AppText } from '../../../../components/ui/AppText';
-import { useGetMyBookingsQuery } from '../../../../store/api/bookingsApi';
 
 export default function BookingSuccessScreen() {
   const { t, i18n } = useTranslation();
@@ -15,11 +14,6 @@ export default function BookingSuccessScreen() {
   const bookingNumber = params.bookingNumber as string;
   const centerName = params.centerName as string;
 
-  const { refetch } = useGetMyBookingsQuery({ page: 0, size: 20 });
-
-  useEffect(() => {
-    refetch();
-  }, [refetch]);
 
   const handleViewBooking = () => {
     router.push('/(app)/(tabs)/bookings');

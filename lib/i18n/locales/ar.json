@@ -104,6 +104,8 @@
     }
   },
   "center": {
+    "name": "اسم المركز",
+    "navigate": "الحصول على الاتجاهات",
     "details": "تفاصيل المركز",
     "open": "مفتوح",
     "closed": "مغلق",
@@ -165,10 +167,17 @@
     "noBookings": "لا توجد حجوزات بعد",
     "noBookingsMessage": "لم تقم بأي حجوزات بعد.",
     "bookYourFirstService": "احجز أول خدمة الآن!",
+    "selectCenterFirst": "الرجاء اختيار مركز أولاً لإجراء الحجز.",
+    "browseCenters": "تصفح المراكز",
     "serviceType": {
-      "car": "سيارة",
-      "electronics": "إلكترونيات",
-      "homeAppliance": "أجهزة منزلية"
+      "repair": "إصلاح",
+      "maintenance": "صيانة",
+      "inspection": "فحص",
+      "installation": "تركيب",
+      "consultation": "استشارة",
+      "emergency": "طارئ",
+      "warranty": "ضمان",
+      "other": "أخرى"
     },
     "status": {
       "pending": "قيد الانتظار",
@@ -180,8 +189,13 @@
     },
     "paymentMethod": {
       "cash": "نقداً",
-      "knet": "كي-نت",
-      "credit_card": "بطاقة ائتمان"
+      "credit_card": "بطاقة ائتمان",
+      "debit_card": "بطاقة خصم",
+      "bank_transfer": "تحويل بنكي",
+      "paypal": "باي بال",
+      "google_pay": "جوجل باي",
+      "apple_pay": "آبل باي",
+      "other": "أخرى"
     },
     "steps": {
       "service": "الخدمة",
@@ -222,7 +236,10 @@
     "editReview": "تعديل التقييم",
     "saveChanges": "حفظ التغييرات",
     "cancel": "إلغاء",
-    "confirm": "تأكيد"
+    "confirm": "تأكيد",
+    "writeReview": "كتابة تقييم",
+    "placeholder": "شارك تجربتك...",
+    "ratingRequired": "الرجاء اختيار تقييم قبل الإرسال"
   },
   "favorites": {
     "title": "المفضلة",

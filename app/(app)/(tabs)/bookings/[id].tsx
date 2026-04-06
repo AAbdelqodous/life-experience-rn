@@ -55,27 +55,29 @@ export default function BookingDetailScreen() {
 
   const getServiceTypeLabel = (type: ServiceType) => {
     switch (type) {
-      case ServiceType.CAR:
-        return t('booking.serviceType.car');
-      case ServiceType.ELECTRONICS:
-        return t('booking.serviceType.electronics');
-      case ServiceType.HOME_APPLIANCE:
-        return t('booking.serviceType.homeAppliance');
-      default:
-        return type;
+      case ServiceType.REPAIR: return t('booking.serviceType.repair');
+      case ServiceType.MAINTENANCE: return t('booking.serviceType.maintenance');
+      case ServiceType.INSPECTION: return t('booking.serviceType.inspection');
+      case ServiceType.INSTALLATION: return t('booking.serviceType.installation');
+      case ServiceType.CONSULTATION: return t('booking.serviceType.consultation');
+      case ServiceType.EMERGENCY: return t('booking.serviceType.emergency');
+      case ServiceType.WARRANTY: return t('booking.serviceType.warranty');
+      case ServiceType.OTHER: return t('booking.serviceType.other');
+      default: return type;
     }
   };
 
   const getPaymentMethodLabel = (method: PaymentMethod) => {
     switch (method) {
-      case PaymentMethod.CASH:
-        return t('booking.paymentMethod.cash');
-      case PaymentMethod.KNET:
-        return t('booking.paymentMethod.knet');
-      case PaymentMethod.CREDIT_CARD:
-        return t('booking.paymentMethod.credit_card');
-      default:
-        return method;
+      case PaymentMethod.CASH: return t('booking.paymentMethod.cash');
+      case PaymentMethod.CREDIT_CARD: return t('booking.paymentMethod.credit_card');
+      case PaymentMethod.DEBIT_CARD: return t('booking.paymentMethod.debit_card');
+      case PaymentMethod.BANK_TRANSFER: return t('booking.paymentMethod.bank_transfer');
+      case PaymentMethod.PAYPAL: return t('booking.paymentMethod.paypal');
+      case PaymentMethod.GOOGLE_PAY: return t('booking.paymentMethod.google_pay');
+      case PaymentMethod.APPLE_PAY: return t('booking.paymentMethod.apple_pay');
+      case PaymentMethod.OTHER: return t('booking.paymentMethod.other');
+      default: return method;
     }
   };
 

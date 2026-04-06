@@ -37,14 +37,15 @@ export default function BookingCard({ booking }: BookingCardProps) {
 
   const getServiceTypeLabel = (type: ServiceType) => {
     switch (type) {
-      case ServiceType.CAR:
-        return t('booking.serviceType.car');
-      case ServiceType.ELECTRONICS:
-        return t('booking.serviceType.electronics');
-      case ServiceType.HOME_APPLIANCE:
-        return t('booking.serviceType.homeAppliance');
-      default:
-        return type;
+      case ServiceType.REPAIR: return t('booking.serviceType.repair');
+      case ServiceType.MAINTENANCE: return t('booking.serviceType.maintenance');
+      case ServiceType.INSPECTION: return t('booking.serviceType.inspection');
+      case ServiceType.INSTALLATION: return t('booking.serviceType.installation');
+      case ServiceType.CONSULTATION: return t('booking.serviceType.consultation');
+      case ServiceType.EMERGENCY: return t('booking.serviceType.emergency');
+      case ServiceType.WARRANTY: return t('booking.serviceType.warranty');
+      case ServiceType.OTHER: return t('booking.serviceType.other');
+      default: return type;
     }
   };
 

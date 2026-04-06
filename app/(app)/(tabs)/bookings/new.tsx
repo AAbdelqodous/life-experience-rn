@@ -71,15 +71,22 @@ export default function NewBookingScreen() {
   };
 
   const serviceTypes = [
-    { value: ServiceType.CAR, label: t('booking.serviceType.car'), icon: '🚗' },
-    { value: ServiceType.ELECTRONICS, label: t('booking.serviceType.electronics'), icon: '📱' },
-    { value: ServiceType.HOME_APPLIANCE, label: t('booking.serviceType.homeAppliance'), icon: '🏠' },
+    { value: ServiceType.REPAIR, label: t('booking.serviceType.repair'), icon: '🔧' },
+    { value: ServiceType.MAINTENANCE, label: t('booking.serviceType.maintenance'), icon: '⚙️' },
+    { value: ServiceType.INSPECTION, label: t('booking.serviceType.inspection'), icon: '🔍' },
+    { value: ServiceType.INSTALLATION, label: t('booking.serviceType.installation'), icon: '🔩' },
+    { value: ServiceType.CONSULTATION, label: t('booking.serviceType.consultation'), icon: '💬' },
+    { value: ServiceType.EMERGENCY, label: t('booking.serviceType.emergency'), icon: '🚨' },
+    { value: ServiceType.WARRANTY, label: t('booking.serviceType.warranty'), icon: '🛡️' },
+    { value: ServiceType.OTHER, label: t('booking.serviceType.other'), icon: '📋' },
   ];
 
   const paymentMethods = [
     { value: PaymentMethod.CASH, label: t('booking.paymentMethod.cash'), icon: '💵' },
-    { value: PaymentMethod.KNET, label: t('booking.paymentMethod.knet'), icon: '💳' },
     { value: PaymentMethod.CREDIT_CARD, label: t('booking.paymentMethod.credit_card'), icon: '💳' },
+    { value: PaymentMethod.DEBIT_CARD, label: t('booking.paymentMethod.debit_card'), icon: '💳' },
+    { value: PaymentMethod.BANK_TRANSFER, label: t('booking.paymentMethod.bank_transfer'), icon: '🏦' },
+    { value: PaymentMethod.OTHER, label: t('booking.paymentMethod.other'), icon: '💰' },
   ];
 
   const handleNextStep = () => {
@@ -137,6 +144,19 @@ export default function NewBookingScreen() {
       ))}
     </View>
   );
+
+  if (!centerId) {
+    return (
+      <View style={styles.loading}>
+        <AppText style={{ color: '#F44336', textAlign: 'center', margin: 20 }}>
+          {t('booking.selectCenterFirst')}
+        </AppText>
+        <TouchableOpacity onPress={() => router.replace('/(app)/(tabs)/centers')} style={{ alignItems: 'center' }}>
+          <AppText style={{ color: '#2196F3', fontSize: 16 }}>{t('booking.browseCenters')}</AppText>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   if (centerLoading) {
     return (
