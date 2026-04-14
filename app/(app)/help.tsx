@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Alert, Linking, Platform, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { AppText } from '../../components/ui/AppText';
 
 interface FAQItem {
@@ -32,6 +32,20 @@ export default function HelpScreen() {
 
   const toggleFAQ = (index: number) => {
     setExpandedFAQ(expandedFAQ === index ? null : index);
+  };
+
+  const handleEmailPress = async () => {
+    const email = 'support@maintenancecenters.kw';
+    const subject = 'Support Request';
+    const url = Platform.OS === 'web'
+      ? `mailto:${email}?subject=${encodeURIComponent(subject)}`
+      : `mailto:${email}?subject=${encodeURIComponent(subject)}`;
+
+    try {
+      await Linking.openURL(url);
+    } catch {
+      Alert.alert(t('common.error'), t('common.retry'));
+    }
   };
 
   const handleReportProblem = () => {
@@ -89,7 +103,10 @@ export default function HelpScreen() {
         <View style={styles.section}>
           <AppText style={styles.sectionTitle}>{t('help.contactUs')}</AppText>
           <View style={styles.contactCard}>
-            <TouchableOpacity style={[styles.contactItem, isRTL && styles.contactItemRtl]}>
+            <TouchableOpacity
+              style={[styles.contactItem, isRTL && styles.contactItemRtl]}
+              onPress={handleEmailPress}
+            >
               <View style={[styles.contactIcon, { backgroundColor: '#E3F2FD' }]}>
                 <Ionicons name="mail-outline" size={20} color="#2196F3" />
               </View>

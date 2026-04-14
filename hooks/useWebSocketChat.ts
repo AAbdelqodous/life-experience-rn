@@ -206,8 +206,8 @@ export function useWebSocketChat(): WebSocketChatHookReturn {
       return;
     }
 
-    const messageBody = JSON.stringify({ conversationId, content });
-    const sendFrame = `SEND\ndestination:/app/chat.send\ncontent-length:${messageBody.length}\n\n${messageBody}\0`;
+    const messageBody = JSON.stringify({ content, messageType: 'TEXT' });
+    const sendFrame = `SEND\ndestination:/app/chat/${conversationId}\ncontent-length:${messageBody.length}\n\n${messageBody}\0`;
     wsRef.current.send(sendFrame);
   }, []);
 

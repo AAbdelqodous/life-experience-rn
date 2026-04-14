@@ -165,8 +165,12 @@
 4. Phase 4: US2 Registration ✅
 5. **STOP & VALIDATE**: user can register and verify OTP ← current state
 
-### Full Phase 1 ✅ (T001–T043)
-US3 Login ✅ → US4 Language ✅ → US5 Session Expiry ✅ → Polish ✅ (T044–T051 all complete)
+### Full Phase 1 ✅ (T001–T051 all complete)
+US3 Login ✅ → US4 Language ✅ → US5 Session Expiry ✅ → Polish ✅
+
+### Phase 2 — Core Screens 🔄 In Progress
+Completed: Centers list/detail, Bookings list, Chat conversations list, Favorites, Notifications, Profile, My Reviews, Complaints list
+Remaining: bookings/new.tsx, bookings/[id].tsx, bookings/confirmation.tsx, bookings/success.tsx, chat/[id].tsx (WebSocket), reviews/new.tsx, complaints/new.tsx, complaints/[id].tsx, stub screens
 
 ---
 
@@ -174,4 +178,5 @@ US3 Login ✅ → US4 Language ✅ → US5 Session Expiry ✅ → Polish ✅ (T0
 
 - `[P]` = different files, no blocking dependencies
 - `[USn]` = traceability label linking task to user story
-- Total tasks: **51** | Completed: **43** | Remaining: **8** (Phase 8 polish)
+- Phase 1 total tasks: **51** | Completed: **51** | Remaining: **0**
+- Phase 2 screens: ~17 screens complete, ~9 screens remaining

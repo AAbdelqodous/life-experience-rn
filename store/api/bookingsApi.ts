@@ -14,25 +14,18 @@ export enum BookingStatus {
 }
 
 export enum ServiceType {
-  REPAIR = 'REPAIR',
-  MAINTENANCE = 'MAINTENANCE',
-  INSPECTION = 'INSPECTION',
-  INSTALLATION = 'INSTALLATION',
-  CONSULTATION = 'CONSULTATION',
+  CAR = 'CAR',
+  ELECTRONICS = 'ELECTRONICS',
+  HOME_APPLIANCE = 'HOME_APPLIANCE',
   EMERGENCY = 'EMERGENCY',
-  WARRANTY = 'WARRANTY',
-  OTHER = 'OTHER',
+  INSTALLATION = 'INSTALLATION',
+  REPAIR = 'REPAIR',
 }
 
 export enum PaymentMethod {
   CASH = 'CASH',
+  KNET = 'KNET',
   CREDIT_CARD = 'CREDIT_CARD',
-  DEBIT_CARD = 'DEBIT_CARD',
-  BANK_TRANSFER = 'BANK_TRANSFER',
-  PAYPAL = 'PAYPAL',
-  GOOGLE_PAY = 'GOOGLE_PAY',
-  APPLE_PAY = 'APPLE_PAY',
-  OTHER = 'OTHER',
 }
 
 export enum PaymentStatus {
@@ -53,7 +46,8 @@ export interface Booking {
   bookingNumber?: string;
   userId: number;
   centerId: number;
-  centerName: string;
+  centerNameAr: string;
+  centerNameEn: string;
   serviceType: ServiceType;
   serviceDescription?: string;
   bookingDate: string;

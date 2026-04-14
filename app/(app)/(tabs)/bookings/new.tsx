@@ -16,7 +16,6 @@ import { AppText } from '../../../../components/ui/AppText';
 import {
     PaymentMethod,
     ServiceType,
-    useCreateBookingMutation,
 } from '../../../../store/api/bookingsApi';
 import { useGetCenterByIdQuery } from '../../../../store/api/centersApi';
 
@@ -39,7 +38,6 @@ export default function NewBookingScreen() {
     Number(centerId),
     { skip: !centerId }
   );
-  const [createBooking, { isLoading: creating }] = useCreateBookingMutation();
 
   // Generate next 7 days
   const getUpcomingDays = () => {
@@ -71,22 +69,18 @@ export default function NewBookingScreen() {
   };
 
   const serviceTypes = [
-    { value: ServiceType.REPAIR, label: t('booking.serviceType.repair'), icon: '🔧' },
-    { value: ServiceType.MAINTENANCE, label: t('booking.serviceType.maintenance'), icon: '⚙️' },
-    { value: ServiceType.INSPECTION, label: t('booking.serviceType.inspection'), icon: '🔍' },
-    { value: ServiceType.INSTALLATION, label: t('booking.serviceType.installation'), icon: '🔩' },
-    { value: ServiceType.CONSULTATION, label: t('booking.serviceType.consultation'), icon: '💬' },
+    { value: ServiceType.CAR, label: t('booking.serviceType.car'), icon: '🚗' },
+    { value: ServiceType.ELECTRONICS, label: t('booking.serviceType.electronics'), icon: '📱' },
+    { value: ServiceType.HOME_APPLIANCE, label: t('booking.serviceType.home_appliance'), icon: '🏠' },
     { value: ServiceType.EMERGENCY, label: t('booking.serviceType.emergency'), icon: '🚨' },
-    { value: ServiceType.WARRANTY, label: t('booking.serviceType.warranty'), icon: '🛡️' },
-    { value: ServiceType.OTHER, label: t('booking.serviceType.other'), icon: '📋' },
+    { value: ServiceType.INSTALLATION, label: t('booking.serviceType.installation'), icon: '🔩' },
+    { value: ServiceType.REPAIR, label: t('booking.serviceType.repair'), icon: '🔧' },
   ];
 
   const paymentMethods = [
     { value: PaymentMethod.CASH, label: t('booking.paymentMethod.cash'), icon: '💵' },
+    { value: PaymentMethod.KNET, label: t('booking.paymentMethod.knet'), icon: '🏦' },
     { value: PaymentMethod.CREDIT_CARD, label: t('booking.paymentMethod.credit_card'), icon: '💳' },
-    { value: PaymentMethod.DEBIT_CARD, label: t('booking.paymentMethod.debit_card'), icon: '💳' },
-    { value: PaymentMethod.BANK_TRANSFER, label: t('booking.paymentMethod.bank_transfer'), icon: '🏦' },
-    { value: PaymentMethod.OTHER, label: t('booking.paymentMethod.other'), icon: '💰' },
   ];
 
   const handleNextStep = () => {
@@ -340,7 +334,7 @@ export default function NewBookingScreen() {
           />
         ) : (
           <AppButton
-            title={creating ? t('common.loading') : t('booking.confirm')}
+            title={t('booking.confirm')}
             onPress={handleConfirm}
             style={styles.nextButton}
           />

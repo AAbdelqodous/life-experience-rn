@@ -170,14 +170,12 @@
     "selectCenterFirst": "Please select a center first to make a booking.",
     "browseCenters": "Browse Centers",
     "serviceType": {
-      "repair": "Repair",
-      "maintenance": "Maintenance",
-      "inspection": "Inspection",
-      "installation": "Installation",
-      "consultation": "Consultation",
+      "car": "Car",
+      "electronics": "Electronics",
+      "home_appliance": "Home Appliance",
       "emergency": "Emergency",
-      "warranty": "Warranty",
-      "other": "Other"
+      "installation": "Installation",
+      "repair": "Repair"
     },
     "status": {
       "pending": "Pending",
@@ -189,13 +187,8 @@
     },
     "paymentMethod": {
       "cash": "Cash",
-      "credit_card": "Credit Card",
-      "debit_card": "Debit Card",
-      "bank_transfer": "Bank Transfer",
-      "paypal": "PayPal",
-      "google_pay": "Google Pay",
-      "apple_pay": "Apple Pay",
-      "other": "Other"
+      "knet": "KNET",
+      "credit_card": "Credit Card"
     },
     "steps": {
       "service": "Service",
@@ -239,7 +232,9 @@
     "confirm": "Confirm",
     "writeReview": "Write a Review",
     "placeholder": "Share your experience...",
-    "ratingRequired": "Please select a rating before submitting"
+    "ratingRequired": "Please select a rating before submitting",
+    "minCommentLength": "Your review must be at least 10 characters",
+    "stars": "stars"
   },
   "favorites": {
     "title": "Favorites",
@@ -379,7 +374,10 @@
     "offline": "Offline",
     "typing": "typing...",
     "lastSeen": "Last seen {{time}}",
-    "startConversation": "Start Conversation"
+    "startConversation": "Start Conversation",
+    "connectionError": "Connection Error",
+    "connectionErrorMessage": "Failed to connect to chat server. Messages may not update in real-time.",
+    "sendFailed": "Failed to send message. Please try again."
   },
   "complaint": {
     "title": "File a Complaint",

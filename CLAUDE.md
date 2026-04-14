@@ -1,277 +1,220 @@
-﻿# Maintenance Center Platform — Claude Code Context
+# Maintenance Customer App — Claude Code Context
 
 ## 🎯 Project Overview
 
-A service marketplace connecting users with verified maintenance centers across Kuwait
-and the broader Middle East. Users can discover, review, and book repair services for
-cars, electronics, and home appliances. Expansion into restaurants, hotels, and other
-service verticals is planned.
+React Native customer-facing app for a service marketplace in Kuwait. Customers
+discover, favorite, book, and review maintenance centers for cars, electronics,
+and home appliances. Real-time chat with centers is supported.
 
 **Target Market:** Kuwait (primary), GCC / Middle East (expansion)
-**Languages:** Arabic (primary), English
-**Status:** Backend domain model and auth largely complete. Services, controllers,
-and DTOs for most domains still need to be built. Mobile apps not yet started.
+**Languages:** Arabic RTL (primary), English
+**Status:** Phase 1 (auth + foundation) ✅ complete. Phase 2 (core screens) ~60% complete.
 
 ---
 
 ## 🏗️ Architecture
 
-### Overall Strategy
-- **Phase 1:** Modular Spring Boot monolith (current) — fast to build, easy to debug
-- **Phase 2:** Extract to microservices as traffic and team grow
-- Domain boundaries are kept clean now to make future extraction straightforward
-
 ### Repository Structure (3 Separate Repos)
 ```
-service-center/               # Spring Boot API — the backend repo (ACTIVE)
-maintenance-customer-app/     # React Native — customer-facing (~30 screens)
-maintenance-center-app/       # React Native — center owner (~20 screens)
+life-experience-app/service-center/   # Spring Boot API backend
+maintenance-center-app/               # React Native center-owner app (complete)
+maintenance-customer-app/             # React Native customer app (this repo, in progress)
 ```
 
-The backend module is named `service-center`, Maven artifact ID is `service-center`,
-group `com.maintainance`. The root IntelliJ project is named `life-experience-app`.
-
-### Actual Backend Package Structure
+### File Layout
 ```
-service-center/src/main/java/com/maintainance/service_center/
-├── address/        # Address (embeddable)
-├── auth/           # AuthController, AuthService, RegistrationRequest, AuthRequest/Response
-├── booking/        # Booking entity + enums (BookingStatus, ServiceType, PaymentMethod, etc.)
-├── category/       # ServiceCategory entity
-├── center/         # MaintenanceCenter entity
-├── chat/           # Conversation, Message entities + enums
-├── complaint/      # Complaint entity + enums
-├── config/         # BeansConfig (AuthProvider, PasswordEncoder, AuthManager)
-├── email/          # EmailService, EmailTemplateName
-├── favorite/       # UserFavorite entity
-├── handler/        # GlobalExceptionHandling, ExceptionResponse, BusinessErrorCodes
-├── notification/   # Notification entity + enums
-├── review/         # Review entity, ReviewRepository
-├── role/           # Role entity, RoleRepository
-├── search/         # SearchHistory entity, SearchSource enum
-├── security/       # JwtService, JwtFilter, SecurityConfig, UserDetailsServiceImpl
-└── user/           # User, Token, TokenRepository, UserRepository, UserType, Language
+maintenance-customer-app/
+├── app/
+│   ├── _layout.tsx                   # Root: Provider + Stack + ErrorBoundary
+│   ├── index.tsx                     # Splash redirect (checks onboarding + session)
+│   ├── (onboarding)/
+│   │   └── index.tsx                 # 3-slide carousel, first-time only
+│   ├── (auth)/
+│   │   ├── index.tsx                 # Auth entry (Sign In / Create Account)
+│   │   ├── login.tsx                 # Login form
+│   │   ├── register.tsx              # Registration form
+│   │   └── otp-verify.tsx            # OTP verification + auto-login
+│   └── (app)/
+│       ├── _layout.tsx               # Auth guard + session expiry check
+│       ├── index.tsx                 # Home placeholder
+│       ├── search.tsx                # Debounced search screen
+│       ├── about.tsx                 # About page
+│       ├── help.tsx                  # Help/FAQ (stub)
+│       ├── privacy.tsx               # Privacy policy (stub)
+│       ├── terms.tsx                 # Terms (stub)
+│       ├── (tabs)/
+│       │   ├── _layout.tsx           # Bottom tabs: Home, Centers, Bookings, Chat, Profile
+│       │   ├── index.tsx             # Tab home/dashboard
+│       │   ├── centers/
+│       │   │   ├── index.tsx         # Center list + search/filter (complete)
+│       │   │   ├── [id].tsx          # Center detail + book/chat/favorite (complete)
+│       │   │   └── reviews.tsx       # Center reviews list (partial)
+│       │   ├── bookings/
+│       │   │   ├── index.tsx         # My bookings list (complete)
+│       │   │   ├── new.tsx           # Booking creation form (partial)
+│       │   │   ├── [id].tsx          # Booking detail + cancel (partial)
+│       │   │   ├── confirmation.tsx  # Booking summary before submit (stub)
+│       │   │   └── success.tsx       # Success screen (stub)
+│       │   ├── chat/
+│       │   │   ├── index.tsx         # Conversations list (complete)
+│       │   │   └── [id].tsx          # Chat thread + WebSocket (partial)
+│       │   ├── favorites/
+│       │   │   └── index.tsx         # Saved centers (complete)
+│       │   ├── notifications/
+│       │   │   └── index.tsx         # Notification list + mark read (complete)
+│       │   └── profile/
+│       │       └── index.tsx         # Profile view/edit/logout (complete)
+│       ├── complaints/
+│       │   ├── index.tsx             # My complaints list (complete)
+│       │   ├── new.tsx               # Create complaint (partial)
+│       │   └── [id].tsx              # Complaint detail (partial)
+│       ├── reviews/
+│       │   ├── index.tsx             # My reviews list (complete)
+│       │   └── new.tsx               # Write review (complete)
+│       └── settings/
+│           ├── language.tsx          # Language switcher (complete)
+│           └── notifications.tsx     # Notification prefs (stub)
+├── store/
+│   ├── index.ts                      # Store + 401 middleware
+│   ├── authSlice.ts                  # session + JWT decode (exp, fullName)
+│   ├── uiSlice.ts                    # locale, isRTL
+│   ├── centersSlice.ts               # filters, recent searches
+│   ├── bookingsSlice.ts              # booking filters
+│   ├── chatSlice.ts                  # messages, conversations
+│   ├── favoritesSlice.ts
+│   ├── notificationsSlice.ts         # unread count
+│   └── api/
+│       ├── authApi.ts                # register, login, activateAccount
+│       ├── centersApi.ts             # search, filter, getById, reviews, categories
+│       ├── bookingsApi.ts            # create, list, getById, cancel
+│       ├── chatApi.ts                # conversations, messages, startConversation
+│       ├── reviewsApi.ts             # create, list, getByCenterId
+│       ├── favoritesApi.ts           # add, remove, check, list
+│       ├── notificationsApi.ts       # list, markRead, delete
+│       ├── complaintsApi.ts          # create, list, getById
+│       └── profileApi.ts             # getMe, update, changePassword, uploadImage
+├── components/
+│   ├── auth/                         # AuthInput, AuthButton, PasswordInput, OtpInput
+│   ├── listings/                     # CenterCard, BookingCard, ReviewCard, NotificationItem
+│   ├── onboarding/                   # OnboardingSlide, OnboardingDots
+│   └── ui/                           # AppText, AppButton, SearchBar, FilterModal, RatingStars, LanguageSwitcher
+├── hooks/
+│   ├── useAuth.ts                    # session, isAuthenticated, isSessionExpired, logout
+│   ├── useLanguage.ts                # locale, isRTL, switchLanguage
+│   ├── useNetworkStatus.ts           # connectivity detection
+│   └── useWebSocketChat.ts           # WebSocket chat (placeholder — needs full implementation)
+├── lib/
+│   ├── constants/config.ts           # API_BASE_URL (from app.config.js extra), WS_BASE_URL
+│   ├── secureStorage.ts              # getJwt / setJwt / deleteJwt via expo-secure-store
+│   └── i18n/
+│       ├── index.ts                  # i18next init, async locale load
+│       └── locales/en.json ar.json
+├── specs/master/                     # Speckit: spec.md, plan.md, tasks.md (Phase 1 complete)
+├── app.config.js                     # Reads EXPO_PUBLIC_API_BASE_URL from .env
+└── app.json                          # Expo SDK 54 config
 ```
 
 ---
 
 ## 🛠️ Tech Stack
 
-### Backend (from actual pom.xml)
 | Layer | Technology |
 |-------|-----------|
-| Framework | Spring Boot **3.5.6** |
-| Language | Java **17** (compiled), JDK 21 in IntelliJ |
-| Database | PostgreSQL **15** |
-| ORM | Spring Data JPA / Hibernate |
-| Auth | JWT via **jjwt 0.11.5** (api + impl + jackson) |
-| Email | JavaMailSender + Thymeleaf |
-| Validation | spring-boot-starter-validation |
-| Security | spring-boot-starter-security |
-| API Docs | springdoc-openapi-starter-webmvc-ui **2.1.0** |
-| Lombok | 1.18.40 (annotation processor in compiler.xml) |
-| Build | Maven wrapper (mvnw, Maven 3.9.11) |
-| Containers | Docker Compose — postgres + maildev |
-
-### Mobile (planned — not started)
-| Layer | Technology |
-|-------|-----------|
-| Framework | React Native 0.73+ |
+| Framework | React Native 0.81.5 + Expo SDK 54 |
 | Language | TypeScript |
-| Navigation | React Navigation 6 |
+| Navigation | Expo Router (file-based) |
 | State | Redux Toolkit + RTK Query |
-| Maps | react-native-maps (Google Maps SDK) |
-| Real-time | Socket.io-client |
-| Push Notifs | Firebase Cloud Messaging |
-| i18n | react-i18next |
+| Forms | React Hook Form + Zod |
+| Persistence | expo-secure-store (JWT) + AsyncStorage (locale, onboarding flag) |
+| i18n | react-i18next (Arabic RTL + English) |
+| Web support | react-native-web (static output) |
+| Icons | @expo/vector-icons (Ionicons) |
+| Network | @react-native-community/netinfo |
+| Images | expo-image + expo-image-picker |
+| Animations | react-native-reanimated + react-native-gesture-handler |
+| New Architecture | Enabled (newArchEnabled: true, reactCompiler: true) |
 
 ---
 
-## 🗄️ Database — Actual State
+## 📡 Backend API
 
-### Docker Compose Services
-- **postgres** — container `le-postgres`, image `postgres:15`, port `5432`
-  - DB name: **`experience`** (not `maintenance_db`)
-  - Username: `abdelqodous`, Password: `P@ssw0rd`
-- **mail-dev** — container `le-mail-dev`, image `maildev/maildev`
-  - Web UI: port `1080`, SMTP: port `1025`
+**Base:** `http://10.0.2.2:8080/api/v1/` (Android) / `http://localhost:8080/api/v1/` (web)
+**Configured via:** `app.config.js → extra.apiBaseUrl → lib/constants/config.ts`
+**Auth header:** `Authorization: Bearer <jwt>`
+**Paginated responses:** `{ content, totalElements, totalPages, number, size }`
 
-### Tables That Already Exist in DB
-| Table | Notes |
+### Key Response Field Names (do not rename)
+| Field | Notes |
 |-------|-------|
-| `_user` | Underscore prefix avoids `user` reserved word conflict |
-| `_user_roles` | Join table: users ↔ roles |
-| `role` | Roles table |
-| `token` | Email verification OTP tokens |
+| `bookingStatus` | NOT `status` |
+| `bookingDate`, `bookingTime` | NOT `scheduledDate`/`scheduledTime` |
+| `isRead` | NOT `read` |
+| `notificationType` | NOT `type` |
+| `totalReviews` | NOT `reviewCount` |
+| `isActive` | NOT `isOpen` |
+| `nameAr`/`nameEn` | Always use bilingual pair |
 
-Sequences: `_user_seq`, `role_seq`, `token_seq`
-
-### Actual `_user` Columns
-`id` (int PK), `account_locked` (bool), `created_date` (timestamp),
-`date_of_birth` (date), `email` (varchar unique), `enabled` (bool),
-`firstname` (varchar), `last_modified_date` (timestamp), `lastname` (varchar),
-`password` (varchar)
-
-### Actual `token` Columns
-`id` (int PK), `created_at` (timestamp), `expires_at` (timestamp),
-`token` (varchar — raw 6-digit OTP string), `validated_at` (timestamp),
-`user_id` (int FK → `_user.id`)
-
-### Entities Defined But Not Yet in DB
-All other JPA entities exist as classes. Hibernate `ddl-auto: update` will create
-their tables on next startup: `booking`, `service_categories`, `maintenance_centers`,
-`conversations`, `messages`, `complaint`, `notifications`, `review`,
-`user_favorite`, `search_history`
-
-### Key JPA Patterns Used in This Codebase
-- **No shared `BaseEntity`** — each entity has its own `@CreatedDate` / `@LastModifiedDate`
-  with `@EntityListeners(AuditingEntityListener.class)` directly
-- `@EnableJpaAuditing` is on `ServiceCenterApplication`
-- `Role.id` → `@GeneratedValue` (no strategy specified — uses TABLE/sequence)
-- `Token.id` → `@GeneratedValue` (same)
-- `User.id` → `@GeneratedValue(strategy = GenerationType.IDENTITY)`
-- `Address` is `@Embeddable`, embedded in `User` and `MaintenanceCenter`
-- Bilingual pattern: `nameAr` / `nameEn`, `descriptionAr` / `descriptionEn`
-  — always use this pattern for any user-facing string field
-
----
-
-## 🔐 Authentication — Actual Implementation
-
-### Working Endpoints
-```
-POST  /api/v1/auth/register           → 202 Accepted (sends OTP email)
-POST  /api/v1/auth/authenticate       → 200 { "token": "<jwt>" }
-GET   /api/v1/auth/activate-account   → ?token=XXXXXX
-```
-
-### How the Flow Works
-1. `register` → saves `User` (`enabled=false`) → generates 6-digit numeric OTP
-   → saves to `token` table → sends via MailDev email
-2. `activate-account` → finds token → checks expiry → if expired, regenerates + resends
-   → sets `user.enabled=true` + `token.validatedAt`
-3. `authenticate` → Spring Security `AuthenticationManager` → JWT with `fullName` claim
-   + authorities list
-
-### JWT Config (application-dev.yml)
-- Property: `application.security.jwt.secret-key` (256-bit base64)
-- Property: `application.security.jwt.expiration` = `8640000` ms (**2.4 hours**)
-- Activation URL: `application.mail.frontend.activation-url` = `http://localhost:4200/activate-account`
-
----
-
-## 🐛 Known Bugs — Fix These Before Building Further
-
-These are real bugs found in the existing code. Do not work around them — fix them properly.
-
-**1. `JwtService.axtractAllClaims()`** — calls `.parseClaimsJwt(token)` (for unsigned
-tokens). Must be `.parseClaimsJws(token)` (for signed tokens). Breaks all JWT validation.
-
-**2. `JwtFilter.userDetailsService` not injected** — field is declared but missing from
-`@RequiredArgsConstructor` injection (it's not `final`). Causes `NullPointerException`
-on every authenticated request. Add `final` keyword or inject via constructor.
-
-**3. `MaintenanceCenter` `@JoinColumn` missing `name =`** — `@JoinColumn("center_id")`
-is invalid syntax, must be `@JoinColumn(name = "center_id")`. Will fail at startup.
-
-**4. `Complaint` entity uses `@Column` instead of `@JoinColumn`** — on `complainant`
-and `center` `@ManyToOne` fields. Will cause Hibernate mapping errors.
-
-**5. `UserFavorite` and `SearchHistory` same issue** — `@Column` on `@ManyToOne` fields
-instead of `@JoinColumn`.
-
-**6. `Message` has wrong `@Table(name = "conversations")`** — must be `"messages"`.
-Will conflict with the `Conversation` entity table.
-
-**7. `ReviewRepository.calculateAverageRating()` JPQL has space** — `: centerId`
-must be `:centerId` (no space). Will throw `QueryException` at startup.
-
----
-
-## 📡 API Design
-
-- Server context path: `/api/v1/` (set in `application.yml`)
-- Auth controller: `@RequestMapping("auth")` → resolves to `/api/v1/auth/**`
-- Swagger UI: `http://localhost:8080/api/v1/swagger-ui/index.html`
-- Authenticated endpoints require: `Authorization: Bearer <jwt>`
-- Pagination: `page`, `size`, `sort` query params (Spring Pageable)
-
-### Error Response (GlobalExceptionHandling)
-```json
+### BookingRequest fields
+```typescript
 {
-  "businessErrorCode": 304,
-  "businessErrorDescription": "Username and / or password is incorrect",
-  "error": "string",
-  "validationErrors": ["field error message"],
-  "errors": { "field": "message" }
+  centerId: number,
+  serviceType: 'CAR' | 'ELECTRONICS' | 'HOME_APPLIANCE' | 'EMERGENCY' | 'INSTALLATION' | 'REPAIR',
+  bookingDate: 'YYYY-MM-DD',
+  bookingTime: 'HH:mm:ss',
+  notes?: string,
+  paymentMethod: 'CASH' | 'KNET' | 'CREDIT_CARD'
 }
 ```
-Fields are omitted when null/empty (`@JsonInclude(NON_EMPTY)`).
-
-### BusinessErrorCodes (existing)
-| Code | Status | Description |
-|------|--------|-------------|
-| 300 | 400 | Incorrect current password |
-| 301 | 400 | New password mismatch |
-| 302 | 403 | Account locked |
-| 303 | 403 | Account disabled |
-| 304 | 403 | Bad credentials |
 
 ---
 
-## 🌍 Localization & Regional Context
+## 🔐 Session & Auth
 
-- Bilingual entity fields: always `nameAr` + `nameEn`, `descriptionAr` + `descriptionEn`
-- Currency: Kuwaiti Dinar (KD)
-- Phone: Kuwait format `+965 XXXX XXXX`
-- Distance: kilometers
-- Time zone: Asia/Kuwait (UTC+3)
-- Mobile UI: all strings via i18n keys — never hardcode display text
+- Login → `secureStorage.setJwt(token)` → Redux `setSession`
+- App launch → `app/_layout.tsx` decodes JWT `exp` claim; expired → `clearSession` → login
+- 401 → Redux middleware clears session → redirect to `/(auth)/`
+- Logout → `useAuth().logout()` → clears JWT + Redux + navigates to auth entry
+
+---
+
+## ⚠️ Production Blockers (NOT production-ready yet)
+
+1. **Partial screens** — bookings/new.tsx, bookings/[id].tsx, chat/[id].tsx, complaints/new.tsx, complaints/[id].tsx are incomplete
+2. **Missing screens** — bookings/confirmation.tsx, bookings/success.tsx not built
+3. **No EAS project ID** — `app.json` missing `extra.eas.projectId` for push notifications
+4. **No refresh token** — JWT expires in 2.4h with no silent refresh; forces re-login
+5. **HTTP not HTTPS** — `config.ts` uses `http://`; must switch to `https://` for production builds
+6. **ws:// not wss://** — `config.ts` derives WebSocket URL; auto-converts http→ws but needs https→wss
+7. **No crash reporting** — ErrorBoundary logs to console only; needs Sentry or Firebase Crashlytics
+8. **No certificate pinning** — RTK Query uses plain fetch; add pinning for production
+9. **Stub screens** — help.tsx, privacy.tsx, terms.tsx, settings/notifications.tsx have no content
 
 ---
 
 ## ⚙️ Development Environment
 
-### Running the Backend
 ```bash
-# Start Docker services (postgres + maildev)
-docker-compose up -d
+# Copy environment file
+cp .env.example .env
+# Edit .env: EXPO_PUBLIC_API_BASE_URL=http://10.0.2.2:8080/api/v1
 
-# Run Spring Boot (from repo root)
-cd service-center
-./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+cd ~/MaintenanceCenters/maintenance-customer-app
 
-# Endpoints
-# API:         http://localhost:8080/api/v1/
-# Swagger UI:  http://localhost:8080/api/v1/swagger-ui/index.html
-# MailDev:     http://localhost:1080
-```
-
-### Running Tests
-```bash
-cd service-center
-./mvnw test
+npx expo start --web          # Web (browser)
+npx expo start                # Native (requires Android/iOS emulator)
 ```
 
 ---
 
 ## 📋 Coding Standards
 
-### Java / Spring Boot
-- **`@RequiredArgsConstructor`** for constructor injection — no `@Autowired` on fields
-- **`@Slf4j`** for logging (already used in `AuthenticationService`)
-- DTOs for all request/response — never expose JPA entities in controllers
-- `@Valid` on all `@RequestBody` parameters
-- Service layer owns all business logic — controllers are thin
-- Never call `Optional.get()` without checking — use `orElseThrow()`
-- `@Transactional` on service methods that write
-- `@Transactional(propagation = Propagation.REQUIRES_NEW)` for independent sub-operations
-- Passwords always `BCryptPasswordEncoder` — never plain
-
-### Entity Conventions
-- Lombok: `@Getter @Setter @Builder @AllArgsConstructor @NoArgsConstructor` on entities
-- Auditing: `@EntityListeners(AuditingEntityListener.class)` + `@CreatedDate` / `@LastModifiedDate`
-- Bilingual string fields: `nameAr` / `nameEn` pair — always both
+- RTK Query for **all** API calls — never raw `fetch`
+- React Hook Form + Zod for all forms
+- `??` not `||` for null/undefined fallbacks (avoids swallowing `false`)
+- `Platform.OS === 'web'` guard for `Alert.alert` multi-button dialogs — use `window.confirm` on web
+- Bilingual: always render `i18n.language === 'ar' ? item.nameAr : item.nameEn`
+- RTL: `isRTL = i18n.dir() === 'rtl'` → `flexDirection: 'row-reverse'`, `textAlign: 'right'`
+- Key field names: `bookingStatus` (not `status`), `bookingDate`/`bookingTime`, `isRead`, `notificationType`
 
 ### Existing Enums (do not redefine)
 `BookingStatus`, `ServiceType`, `PaymentMethod`, `PaymentStatus`, `CancelledBy`,
@@ -282,74 +225,58 @@ cd service-center
 
 ## 🚀 Development Phases
 
-### Phase 1 — Backend (current focus)
-- [x] Project structure, Docker Compose, Maven setup
-- [x] User, Role, Token entities + DB tables
-- [x] Auth: register, OTP email, activate, login (JWT)
-- [x] Email service (MailDev in dev)
-- [x] Global exception handling + BusinessErrorCodes
-- [x] Swagger / OpenAPI
-- [x] All domain entities defined (Booking, Center, Category, Review, Chat, etc.)
-- [ ] **Fix 7 known bugs above — do this first**
-- [ ] MaintenanceCenter: Repository, Service, DTOs, Controller
-- [ ] ServiceCategory: Repository, Service, DTOs, Controller
-- [ ] Booking: Repository, Service, DTOs, Controller
-- [ ] Review: Service, DTOs, Controller (Repository already exists)
-- [ ] User profile: Service, DTOs, Controller
-- [ ] Search & filter endpoint
+### Phase 1 — Foundation ✅ Complete (Tasks T001–T051)
+- [x] Project scaffold + dependencies (Expo SDK 54, RTK Query, React Hook Form, Zod, i18next)
+- [x] Redux store + authSlice + 401 middleware
+- [x] SecureStore session persistence
+- [x] i18n (Arabic RTL + English) with AsyncStorage persistence
+- [x] Error boundary in root layout
+- [x] Onboarding (3-slide carousel, one-time only)
+- [x] Auth flow: register → OTP verify → login (JWT decode with exp check)
+- [x] Session expiry detection + logout
+- [x] Language switcher (AR/EN with RTL flip)
+- [x] Offline detection on all form screens
 
-### Phase 2 — Enhanced Backend
-- [ ] WebSocket / STOMP real-time chat
-- [ ] Firebase push notifications
-- [ ] Image upload
-- [ ] Complaint management
+### Phase 2 — Core Screens 🔄 In Progress (~60%)
+- [x] Centers: search/filter list, center detail
+- [x] Bookings: list with status tabs
+- [x] Chat: conversations list
+- [x] Favorites list
+- [x] Notifications list + mark read
+- [x] Profile view/edit/logout
+- [x] My reviews list, complaints list
+- [x] Write review (reviews/new.tsx)
+- [ ] Booking form (new.tsx) — needs date/time pickers + payment method
+- [ ] Booking detail ([id].tsx) — needs full fields + cancel + write review button
+- [ ] Booking confirmation + success screens
+- [ ] Chat thread ([id].tsx) — needs full WebSocket/STOMP real-time implementation
+- [ ] Complaint new + detail screens
+- [ ] Push notifications (FCM)
 
-### Phase 3 — Mobile Apps
-- [ ] React Native customer app (30 screens)
-- [ ] React Native center owner app (20 screens)
-
-### Phase 4 — Advanced
-- [ ] KNET payment integration (Kuwait)
-- [ ] Analytics dashboard for center owners
-- [ ] Offline support
+### Phase 3 — Polish & Production
+- [ ] Refresh token flow
+- [ ] EAS project ID + push notification setup
+- [ ] HTTPS/WSS enforcement
+- [ ] Crash reporting (Sentry)
+- [ ] Certificate pinning
+- [ ] Fill stub screens (help, privacy, terms, notification prefs)
+- [ ] App store submission (EAS build)
 
 ---
 
-## 🧠 Claude Code Preferences
-
-### ⚠️ MUST follow — non-negotiable rules
+## 🧠 Claude Code Rules
 
 **1. Always ask before executing any command.**
-Never run `mvn`, `npm`, `docker`, `git`, or any shell command without stating
-what you are about to run and waiting for explicit confirmation ("yes" / "go ahead").
+State what you are about to run and wait for explicit confirmation.
 
 **2. Always ask before modifying any existing file.**
-For every existing file that would change, show:
-- The full file path
-- A clear summary of what will change and why
-Then wait for confirmation before writing.
+Show full file path + summary of changes. Wait for confirmation.
 
-**3. Always run tests after making changes — and report results.**
-```bash
-cd service-center && ./mvnw test
-```
-If tests fail, fix them before considering the task complete. Do not skip this.
+**3. Read each file before editing it.**
 
-**4. Always write production-ready code — no pseudocode or placeholders.**
-No `// TODO`, stub returns, or `throw new UnsupportedOperationException()`
-unless explicitly requested.
+**4. Production-ready code only — no pseudocode or placeholders.**
 
-### General Workflow
-
-- **New feature pattern:** Repository → Service → DTOs → Controller
-- **Bilingual fields:** Always add both `Ar` and `En` variants
-- **Ambiguity:** Ask one focused clarifying question — do not assume
-- **Secrets:** Use `application.yml` properties — never hardcode
-- **Lombok:** `@RequiredArgsConstructor` for injection, `@Slf4j` for logging
-
-### Repo Awareness
-
-3 separate repos — always confirm which repo before acting:
-- `service-center` — Spring Boot backend (currently active)
-- `maintenance-customer-app` — React Native customer app (not started)
-- `maintenance-center-app` — React Native center owner app (not started)
+**5. Always confirm which repo before acting.**
+- `service-center` — Spring Boot backend
+- `maintenance-center-app` — React Native center-owner app
+- `maintenance-customer-app` — React Native customer app (this repo)

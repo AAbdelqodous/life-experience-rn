@@ -6,16 +6,17 @@ import { Alert, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from
 import { AppButton } from '../../../../components/ui/AppButton';
 import { AppText } from '../../../../components/ui/AppText';
 import { BookingStatus, PaymentMethod, ServiceType, useCancelBookingMutation, useGetBookingByIdQuery } from '../../../../store/api/bookingsApi';
+import { useCreateConversationMutation } from '../../../../store/api/chatApi';
 
 export default function BookingDetailScreen() {
   const { t, i18n } = useTranslation();
   const router = useRouter();
   const params = useLocalSearchParams();
-  const isRTL = i18n.dir() === 'rtl';
 
   const bookingId = Number(params.id);
   const { data: booking, isLoading } = useGetBookingByIdQuery(bookingId);
   const [cancelBooking] = useCancelBookingMutation();
+  const [createConversation] = useCreateConversationMutation();
   const [showCancelDialog, setShowCancelDialog] = useState(false);
   const [cancelReason, setCancelReason] = useState('');
 
@@ -29,7 +30,38 @@ export default function BookingDetailScreen() {
       await cancelBooking({ id: bookingId, data: { reason: cancelReason } }).unwrap();
       Alert.alert(t('common.success'), t('booking.cancel') + ' ' + t('common.success'));
       router.back();
-    } catch (error) {
+    } catch {
+      Alert.alert(t('common.error'), t('common.retry'));
+    }
+  };
+
+  const handleWriteReview = () => {
+    if (!booking) return;
+    router.push({
+      pathname: '/(app)/reviews/new',
+      params: {
+        bookingId: String(bookingId),
+        centerId: String(booking.centerId),
+        centerNameEn: booking.centerNameEn,
+        centerNameAr: booking.centerNameAr,
+      },
+    });
+  };
+
+  const handleChat = async () => {
+    if (!booking) return;
+    try {
+      const conversation = await createConversation(booking.centerId).unwrap();
+      router.push({
+        pathname: '/(app)/(tabs)/chat/[id]',
+        params: {
+          id: String(conversation.id),
+          centerId: String(booking.centerId),
+          centerNameAr: booking.centerNameAr,
+          centerNameEn: booking.centerNameEn,
+        },
+      });
+    } catch {
       Alert.alert(t('common.error'), t('common.retry'));
     }
   };
@@ -55,14 +87,12 @@ export default function BookingDetailScreen() {
 
   const getServiceTypeLabel = (type: ServiceType) => {
     switch (type) {
-      case ServiceType.REPAIR: return t('booking.serviceType.repair');
-      case ServiceType.MAINTENANCE: return t('booking.serviceType.maintenance');
-      case ServiceType.INSPECTION: return t('booking.serviceType.inspection');
-      case ServiceType.INSTALLATION: return t('booking.serviceType.installation');
-      case ServiceType.CONSULTATION: return t('booking.serviceType.consultation');
+      case ServiceType.CAR: return t('booking.serviceType.car');
+      case ServiceType.ELECTRONICS: return t('booking.serviceType.electronics');
+      case ServiceType.HOME_APPLIANCE: return t('booking.serviceType.home_appliance');
       case ServiceType.EMERGENCY: return t('booking.serviceType.emergency');
-      case ServiceType.WARRANTY: return t('booking.serviceType.warranty');
-      case ServiceType.OTHER: return t('booking.serviceType.other');
+      case ServiceType.INSTALLATION: return t('booking.serviceType.installation');
+      case ServiceType.REPAIR: return t('booking.serviceType.repair');
       default: return type;
     }
   };
@@ -70,13 +100,8 @@ export default function BookingDetailScreen() {
   const getPaymentMethodLabel = (method: PaymentMethod) => {
     switch (method) {
       case PaymentMethod.CASH: return t('booking.paymentMethod.cash');
+      case PaymentMethod.KNET: return t('booking.paymentMethod.knet');
       case PaymentMethod.CREDIT_CARD: return t('booking.paymentMethod.credit_card');
-      case PaymentMethod.DEBIT_CARD: return t('booking.paymentMethod.debit_card');
-      case PaymentMethod.BANK_TRANSFER: return t('booking.paymentMethod.bank_transfer');
-      case PaymentMethod.PAYPAL: return t('booking.paymentMethod.paypal');
-      case PaymentMethod.GOOGLE_PAY: return t('booking.paymentMethod.google_pay');
-      case PaymentMethod.APPLE_PAY: return t('booking.paymentMethod.apple_pay');
-      case PaymentMethod.OTHER: return t('booking.paymentMethod.other');
       default: return method;
     }
   };
@@ -107,7 +132,7 @@ export default function BookingDetailScreen() {
     );
   }
 
-  const centerName = booking.centerName;
+  const centerName = i18n.language === 'ar' ? booking.centerNameAr : booking.centerNameEn;
   const canCancel = booking.bookingStatus === BookingStatus.PENDING || booking.bookingStatus === BookingStatus.CONFIRMED;
 
   return (
@@ -247,6 +272,20 @@ export default function BookingDetailScreen() {
               style={[styles.actionButton, styles.cancelButton] as any}
             />
           )}
+          {booking.bookingStatus === BookingStatus.COMPLETED && (
+            <AppButton
+              title={t('review.writeReview')}
+              onPress={handleWriteReview}
+              variant="secondary"
+              style={styles.actionButton as any}
+            />
+          )}
+          <AppButton
+            title={t('center.chatWithCenter')}
+            onPress={handleChat}
+            variant="secondary"
+            style={styles.actionButton as any}
+          />
           {(booking.bookingStatus === BookingStatus.COMPLETED || booking.bookingStatus === BookingStatus.CANCELLED) && (
             <AppButton
               title={t('complaint.fileComplaint')}
@@ -256,7 +295,7 @@ export default function BookingDetailScreen() {
                   params: {
                     bookingId: String(booking.id),
                     centerId: String(booking.centerId),
-                    centerName: booking.centerName,
+                    centerName: centerName,
                   },
                 });
               }}

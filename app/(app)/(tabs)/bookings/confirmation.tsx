@@ -40,25 +40,18 @@ export default function BookingConfirmationScreen() {
   const [createBooking, { isLoading: creating }] = useCreateBookingMutation();
 
   const serviceTypes: Record<ServiceType, string> = {
-    [ServiceType.REPAIR]: t('booking.serviceType.repair'),
-    [ServiceType.MAINTENANCE]: t('booking.serviceType.maintenance'),
-    [ServiceType.INSPECTION]: t('booking.serviceType.inspection'),
-    [ServiceType.INSTALLATION]: t('booking.serviceType.installation'),
-    [ServiceType.CONSULTATION]: t('booking.serviceType.consultation'),
+    [ServiceType.CAR]: t('booking.serviceType.car'),
+    [ServiceType.ELECTRONICS]: t('booking.serviceType.electronics'),
+    [ServiceType.HOME_APPLIANCE]: t('booking.serviceType.home_appliance'),
     [ServiceType.EMERGENCY]: t('booking.serviceType.emergency'),
-    [ServiceType.WARRANTY]: t('booking.serviceType.warranty'),
-    [ServiceType.OTHER]: t('booking.serviceType.other'),
+    [ServiceType.INSTALLATION]: t('booking.serviceType.installation'),
+    [ServiceType.REPAIR]: t('booking.serviceType.repair'),
   };
 
   const paymentMethods: Record<PaymentMethod, string> = {
     [PaymentMethod.CASH]: t('booking.paymentMethod.cash'),
+    [PaymentMethod.KNET]: t('booking.paymentMethod.knet'),
     [PaymentMethod.CREDIT_CARD]: t('booking.paymentMethod.credit_card'),
-    [PaymentMethod.DEBIT_CARD]: t('booking.paymentMethod.debit_card'),
-    [PaymentMethod.BANK_TRANSFER]: t('booking.paymentMethod.bank_transfer'),
-    [PaymentMethod.PAYPAL]: t('booking.paymentMethod.paypal'),
-    [PaymentMethod.GOOGLE_PAY]: t('booking.paymentMethod.google_pay'),
-    [PaymentMethod.APPLE_PAY]: t('booking.paymentMethod.apple_pay'),
-    [PaymentMethod.OTHER]: t('booking.paymentMethod.other'),
   };
 
   const handleEdit = () => {

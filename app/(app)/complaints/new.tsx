@@ -42,6 +42,11 @@ export default function NewComplaintScreen() {
       return;
     }
 
+    if (!centerId) {
+      Alert.alert(t('common.error'), t('complaint.centerRequired'));
+      return;
+    }
+
     try {
       await createComplaint({
         centerId,
@@ -52,7 +57,7 @@ export default function NewComplaintScreen() {
       Alert.alert(t('complaint.success'), '', [
         { text: t('common.ok'), onPress: () => router.replace('/(app)/complaints') },
       ]);
-    } catch (error) {
+    } catch {
       Alert.alert(t('common.error'), t('complaint.submitError'));
     }
   };

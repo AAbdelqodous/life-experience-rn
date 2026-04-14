@@ -170,14 +170,12 @@
     "selectCenterFirst": "الرجاء اختيار مركز أولاً لإجراء الحجز.",
     "browseCenters": "تصفح المراكز",
     "serviceType": {
-      "repair": "إصلاح",
-      "maintenance": "صيانة",
-      "inspection": "فحص",
-      "installation": "تركيب",
-      "consultation": "استشارة",
+      "car": "سيارة",
+      "electronics": "إلكترونيات",
+      "home_appliance": "أجهزة منزلية",
       "emergency": "طارئ",
-      "warranty": "ضمان",
-      "other": "أخرى"
+      "installation": "تركيب",
+      "repair": "إصلاح"
     },
     "status": {
       "pending": "قيد الانتظار",
@@ -189,13 +187,8 @@
     },
     "paymentMethod": {
       "cash": "نقداً",
-      "credit_card": "بطاقة ائتمان",
-      "debit_card": "بطاقة خصم",
-      "bank_transfer": "تحويل بنكي",
-      "paypal": "باي بال",
-      "google_pay": "جوجل باي",
-      "apple_pay": "آبل باي",
-      "other": "أخرى"
+      "knet": "كي نت",
+      "credit_card": "بطاقة ائتمان"
     },
     "steps": {
       "service": "الخدمة",
@@ -239,7 +232,9 @@
     "confirm": "تأكيد",
     "writeReview": "كتابة تقييم",
     "placeholder": "شارك تجربتك...",
-    "ratingRequired": "الرجاء اختيار تقييم قبل الإرسال"
+    "ratingRequired": "الرجاء اختيار تقييم قبل الإرسال",
+    "minCommentLength": "يجب أن يكون تقييمك 10 أحرف على الأقل",
+    "stars": "نجوم"
   },
   "favorites": {
     "title": "المفضلة",
@@ -379,7 +374,10 @@
     "offline": "غير متصل",
     "typing": "يكتب...",
     "lastSeen": "آخر ظهور {{time}}",
-    "startConversation": "بدء محادثة"
+    "startConversation": "بدء محادثة",
+    "connectionError": "خطأ في الاتصال",
+    "connectionErrorMessage": "فشل الاتصال بخادم الدردشة. قد لا تظهر الرسائل في الوقت الفعلي.",
+    "sendFailed": "فشل إرسال الرسالة. حاول مرة أخرى."
   },
   "complaint": {
     "title": "تقديم شكوى",

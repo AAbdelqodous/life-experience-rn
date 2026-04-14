@@ -19,6 +19,7 @@ export interface Review {
 
 export interface CreateReviewRequest {
   centerId: number;
+  bookingId?: number;
   rating: number;
   comment: string;
 }
