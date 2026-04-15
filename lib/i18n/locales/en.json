@@ -131,7 +131,15 @@
     "averageRating": "Average Rating",
     "rating": "Rating",
     "seeAllReviews": "See All Reviews",
-    "viewAllReviews": "View all {{count}} reviews"
+    "viewAllReviews": "View all {{count}} reviews",
+    "trustBadges": "Trust & Certifications",
+    "badges": {
+      "VERIFIED_BUSINESS": "Verified Business",
+      "YEARS_EXPERIENCE": "{{years}} Years Experience",
+      "CERTIFIED_TECHNICIANS": "Certified Technicians",
+      "SATISFACTION_GUARANTEE": "Satisfaction Guarantee",
+      "LICENSED": "Licensed"
+    }
   },
   "booking": {
     "title": "Book a Service",
@@ -183,7 +191,8 @@
       "in_progress": "In Progress",
       "completed": "Completed",
       "cancelled": "Cancelled",
-      "rejected": "Rejected"
+      "rejected": "Rejected",
+      "quote_ready": "Quote Ready"
     },
     "paymentMethod": {
       "cash": "Cash",
@@ -208,7 +217,54 @@
     "reminderNotification": "You will be reminded before your appointment.",
     "viewBooking": "View My Bookings",
     "bookAnother": "Book Another Service",
-    "shareBooking": "Share Booking"
+    "shareBooking": "Share Booking",
+    "trackProgress": "Track Progress",
+    "workPhotos": "Work Photos",
+    "quoteReady": "Quote Ready",
+    "progress": {
+      "title": "Work Progress",
+      "noUpdates": "No progress updates yet",
+      "estimatedCompletion": "Est. completion",
+      "delayed": "Delayed",
+      "stages": {
+        "RECEIVED": "Received",
+        "DIAGNOSING": "Diagnosing",
+        "PARTS_ORDERED": "Parts Ordered",
+        "WORK_IN_PROGRESS": "Work in Progress",
+        "QUALITY_CHECK": "Quality Check",
+        "READY_FOR_PICKUP": "Ready for Pickup",
+        "PICKED_UP": "Picked Up"
+      }
+    },
+    "photos": {
+      "title": "Work Photos",
+      "noPhotos": "No photos yet",
+      "categories": {
+        "DIAGNOSTICS": "Diagnostics",
+        "PARTS": "Parts",
+        "WORK_IN_PROGRESS": "Work in Progress",
+        "COMPLETED": "Completed"
+      }
+    },
+    "quote": {
+      "title": "Service Quote",
+      "description": "Description",
+      "parts": "Parts",
+      "labour": "Labour",
+      "subtotal": "Subtotal",
+      "discount": "Discount",
+      "tax": "Tax",
+      "total": "Total",
+      "estimatedDuration": "Estimated Duration",
+      "approve": "Approve Quote",
+      "reject": "Reject Quote",
+      "confirmApprove": "Approve this quote and allow work to begin?",
+      "confirmReject": "Reject this quote?",
+      "rejectReasonPlaceholder": "Reason for rejection (optional)",
+      "approved": "Quote Approved",
+      "rejected": "Quote Rejected",
+      "noItems": "No items"
+    }
   },
   "review": {
     "title": "Write a Review",

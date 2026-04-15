@@ -9,6 +9,9 @@ import { complaintsApi } from './api/complaintsApi';
 import { favoritesApi } from './api/favoritesApi';
 import { notificationsApi } from './api/notificationsApi';
 import { profileApi } from './api/profileApi';
+import { progressApi } from './api/progressApi';
+import { mediaApi } from './api/mediaApi';
+import { quoteApi } from './api/quoteApi';
 import { reviewsApi } from './api/reviewsApi';
 import authReducer from './authSlice';
 import bookingsReducer from './bookingsSlice';
@@ -36,6 +39,9 @@ export const store = configureStore({
     [chatApi.reducerPath]: chatApi.reducer,
     [complaintsApi.reducerPath]: complaintsApi.reducer,
     [profileApi.reducerPath]: profileApi.reducer,
+    [progressApi.reducerPath]: progressApi.reducer,
+    [mediaApi.reducerPath]: mediaApi.reducer,
+    [quoteApi.reducerPath]: quoteApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -48,6 +54,9 @@ export const store = configureStore({
       chatApi.middleware,
       complaintsApi.middleware,
       profileApi.middleware,
+      progressApi.middleware,
+      mediaApi.middleware,
+      quoteApi.middleware,
     ),
 });
 

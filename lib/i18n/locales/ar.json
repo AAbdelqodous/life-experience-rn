@@ -131,7 +131,15 @@
     "averageRating": "متوسط التقييم",
     "rating": "التقييم",
     "seeAllReviews": "عرض كل التقييمات",
-    "viewAllReviews": "عرض جميع التقييمات ({{count}})"
+    "viewAllReviews": "عرض جميع التقييمات ({{count}})",
+    "trustBadges": "الثقة والشهادات",
+    "badges": {
+      "VERIFIED_BUSINESS": "نشاط تجاري موثق",
+      "YEARS_EXPERIENCE": "{{years}} سنوات خبرة",
+      "CERTIFIED_TECHNICIANS": "فنيون معتمدون",
+      "SATISFACTION_GUARANTEE": "ضمان الرضا",
+      "LICENSED": "مرخص"
+    }
   },
   "booking": {
     "title": "حجز خدمة",
@@ -183,7 +191,8 @@
       "in_progress": "قيد التنفيذ",
       "completed": "مكتمل",
       "cancelled": "ملغي",
-      "rejected": "مرفوض"
+      "rejected": "مرفوض",
+      "quote_ready": "عرض السعر جاهز"
     },
     "paymentMethod": {
       "cash": "نقداً",
@@ -208,7 +217,54 @@
     "reminderNotification": "سيتم تذكيرك قبل موعدك.",
     "viewBooking": "عرض حجوزاتي",
     "bookAnother": "حجز خدمة أخرى",
-    "shareBooking": "مشاركة الحجز"
+    "shareBooking": "مشاركة الحجز",
+    "trackProgress": "تتبع التقدم",
+    "workPhotos": "صور الأعمال",
+    "quoteReady": "عرض السعر جاهز",
+    "progress": {
+      "title": "تقدم الأعمال",
+      "noUpdates": "لا توجد تحديثات بعد",
+      "estimatedCompletion": "الانتهاء المتوقع",
+      "delayed": "متأخر",
+      "stages": {
+        "RECEIVED": "تم الاستلام",
+        "DIAGNOSING": "قيد التشخيص",
+        "PARTS_ORDERED": "تم طلب قطع الغيار",
+        "WORK_IN_PROGRESS": "العمل جارٍ",
+        "QUALITY_CHECK": "فحص الجودة",
+        "READY_FOR_PICKUP": "جاهز للاستلام",
+        "PICKED_UP": "تم الاستلام"
+      }
+    },
+    "photos": {
+      "title": "صور الأعمال",
+      "noPhotos": "لا توجد صور بعد",
+      "categories": {
+        "DIAGNOSTICS": "التشخيص",
+        "PARTS": "قطع الغيار",
+        "WORK_IN_PROGRESS": "أثناء العمل",
+        "COMPLETED": "بعد الانتهاء"
+      }
+    },
+    "quote": {
+      "title": "عرض السعر",
+      "description": "الوصف",
+      "parts": "قطع الغيار",
+      "labour": "العمالة",
+      "subtotal": "المجموع الفرعي",
+      "discount": "الخصم",
+      "tax": "الضريبة",
+      "total": "الإجمالي",
+      "estimatedDuration": "المدة المتوقعة",
+      "approve": "قبول عرض السعر",
+      "reject": "رفض عرض السعر",
+      "confirmApprove": "قبول عرض السعر والسماح ببدء العمل؟",
+      "confirmReject": "رفض عرض السعر؟",
+      "rejectReasonPlaceholder": "سبب الرفض (اختياري)",
+      "approved": "تم قبول عرض السعر",
+      "rejected": "تم رفض عرض السعر",
+      "noItems": "لا توجد بنود"
+    }
   },
   "review": {
     "title": "اكتب تقييم",

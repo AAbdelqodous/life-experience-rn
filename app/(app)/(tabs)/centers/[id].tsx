@@ -4,11 +4,12 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Alert, FlatList, Image, Modal, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import ReviewCard from '../../../../components/listings/ReviewCard';
+import TrustBadgeList from '../../../../components/centers/TrustBadgeList';
 import { AppText } from '../../../../components/ui/AppText';
 import RatingStars from '../../../../components/ui/RatingStars';
 import { API_BASE_URL } from '../../../../lib/constants/config';
 import { useCreateConversationMutation } from '../../../../store/api/chatApi';
-import { useGetCenterByIdQuery } from '../../../../store/api/centersApi';
+import { useGetCenterByIdQuery, useGetCenterBadgesQuery } from '../../../../store/api/centersApi';
 import { useAddFavoriteMutation, useIsFavoriteQuery, useRemoveFavoriteMutation } from '../../../../store/api/favoritesApi';
 import { useGetCenterReviewsQuery, useCreateReviewMutation } from '../../../../store/api/reviewsApi';
 
@@ -23,6 +24,7 @@ export default function CenterDetailScreen() {
   const centerId = Number(params.id);
 
   const { data: center, isLoading: centerLoading } = useGetCenterByIdQuery(centerId);
+  const { data: badges } = useGetCenterBadgesQuery(centerId);
   const { data: reviewsData } = useGetCenterReviewsQuery({ centerId, page: 0, size: 10 });
 
   const { data: isFavoriteData, refetch: refetchIsFavorite } = useIsFavoriteQuery(centerId);
@@ -220,7 +222,15 @@ export default function CenterDetailScreen() {
                 <AppText style={styles.actionText}>{t('center.bookNow')}</AppText>
               </TouchableOpacity>
             </View>
-          </>
+           </>
+         )}
+
+        {/* Trust Badges */}
+        {badges && badges.length > 0 && (
+          <View style={styles.section}>
+            <AppText style={styles.sectionTitle}>{t('center.trustBadges')}</AppText>
+            <TrustBadgeList badges={badges} isRTL={isRTL} />
+          </View>
         )}
 
         {/* Reviews */}

@@ -11,7 +11,20 @@
       "Bash(git pull:*)",
       "Bash(gh repo:*)",
       "Bash(curl --version)",
-      "Bash(git remote:*)"
+      "Bash(git remote:*)",
+      "Bash(pwsh -NoProfile -Command \".\\\\.specify\\\\scripts\\\\powershell\\\\create-new-feature.ps1 -Json -ShortName 'phase-2-core-screens' 'Phase 2 Core Screens centers bookings chat favorites notifications profile reviews complaints'\")",
+      "Bash(powershell -NoProfile -Command \".\\\\.specify\\\\scripts\\\\powershell\\\\create-new-feature.ps1 -Json -ShortName 'phase-2-core-screens' 'Phase 2 Core Screens centers bookings chat favorites notifications profile reviews complaints'\")",
+      "Bash(powershell -NoProfile -Command \".\\\\.specify\\\\scripts\\\\powershell\\\\setup-plan.ps1 -Json\")",
+      "Bash(powershell -NoProfile -Command \"Get-Content .specify\\\\scripts\\\\powershell\\\\setup-plan.ps1\")",
+      "Bash(powershell -NoProfile -Command \".\\\\.specify\\\\scripts\\\\powershell\\\\update-agent-context.ps1 -AgentType claude\")",
+      "Bash(powershell -NoProfile -Command \".\\\\.specify\\\\scripts\\\\powershell\\\\check-prerequisites.ps1 -Json\")",
+      "Bash(powershell -File .specify/scripts/powershell/setup-plan.ps1 -Json)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git checkout *)",
+      "Bash(ls app/\\\\\\(app\\\\\\)/\\\\\\(tabs\\\\\\)/complaints/ app/\\\\\\(app\\\\\\)/\\\\\\(tabs\\\\\\)/reviews/ app/\\\\\\(app\\\\\\)/\\\\\\(tabs\\\\\\)/centers/ app/\\\\\\(app\\\\\\)/\\\\\\(tabs\\\\\\)/chat/ app/settings/)",
+      "Bash(ls app/\\\\\\(app\\\\\\)/complaints/ app/\\\\\\(app\\\\\\)/reviews/)",
+      "Bash(ls app/\\\\\\(app\\\\\\)/settings/)"
     ]
   }
 }

@@ -11,6 +11,7 @@ export enum BookingStatus {
   COMPLETED = 'COMPLETED',
   CANCELLED = 'CANCELLED',
   REJECTED = 'REJECTED',
+  QUOTE_READY = 'QUOTE_READY',
 }
 
 export enum ServiceType {

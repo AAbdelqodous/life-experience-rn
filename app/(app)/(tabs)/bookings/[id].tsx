@@ -5,16 +5,22 @@ import { useTranslation } from 'react-i18next';
 import { Alert, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { AppButton } from '../../../../components/ui/AppButton';
 import { AppText } from '../../../../components/ui/AppText';
+import QuoteCard from '../../../../components/bookings/QuoteCard';
 import { BookingStatus, PaymentMethod, ServiceType, useCancelBookingMutation, useGetBookingByIdQuery } from '../../../../store/api/bookingsApi';
 import { useCreateConversationMutation } from '../../../../store/api/chatApi';
+import { useGetBookingQuoteQuery } from '../../../../store/api/quoteApi';
 
 export default function BookingDetailScreen() {
   const { t, i18n } = useTranslation();
   const router = useRouter();
   const params = useLocalSearchParams();
+  const isRTL = i18n.dir() === 'rtl';
 
   const bookingId = Number(params.id);
   const { data: booking, isLoading } = useGetBookingByIdQuery(bookingId);
+  const { data: quote, refetch: refetchQuote } = useGetBookingQuoteQuery(bookingId, {
+    skip: booking?.bookingStatus !== BookingStatus.QUOTE_READY,
+  });
   const [cancelBooking] = useCancelBookingMutation();
   const [createConversation] = useCreateConversationMutation();
   const [showCancelDialog, setShowCancelDialog] = useState(false);
@@ -80,6 +86,8 @@ export default function BookingDetailScreen() {
         return '#757575';
       case BookingStatus.REJECTED:
         return '#F44336';
+      case BookingStatus.QUOTE_READY:
+        return '#FF6F00';
       default:
         return '#757575';
     }
@@ -231,6 +239,19 @@ export default function BookingDetailScreen() {
           </View>
         </View>
 
+        {/* Quote */}
+        {booking.bookingStatus === BookingStatus.QUOTE_READY && quote && (
+          <View style={styles.section}>
+            <AppText style={styles.sectionTitle}>{t('booking.quote.title')}</AppText>
+            <QuoteCard
+              quote={quote}
+              isRTL={isRTL}
+              onApproved={() => refetchQuote()}
+              onRejected={() => refetchQuote()}
+            />
+          </View>
+        )}
+
         {/* Cancellation Info */}
         {booking.cancelledReason && (
           <View style={styles.section}>
@@ -264,6 +285,32 @@ export default function BookingDetailScreen() {
 
         {/* Actions */}
         <View style={styles.actions}>
+          {(booking.bookingStatus === BookingStatus.CONFIRMED ||
+            booking.bookingStatus === BookingStatus.QUOTE_READY ||
+            booking.bookingStatus === BookingStatus.IN_PROGRESS) && (
+            <AppButton
+              title={t('booking.trackProgress')}
+              onPress={() =>
+                router.push({
+                  pathname: '/(app)/(tabs)/bookings/progress',
+                  params: { id: String(bookingId) },
+                })
+              }
+              variant="secondary"
+              style={styles.actionButton as any}
+            />
+          )}
+          <AppButton
+            title={t('booking.workPhotos')}
+            onPress={() =>
+              router.push({
+                pathname: '/(app)/(tabs)/bookings/photos',
+                params: { id: String(bookingId) },
+              })
+            }
+            variant="secondary"
+            style={styles.actionButton as any}
+          />
           {canCancel && (
             <AppButton
               title={t('booking.cancel')}
