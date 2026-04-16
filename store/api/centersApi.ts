@@ -33,10 +33,10 @@ export interface MaintenanceCenter {
   phone: string;
   email?: string;
   website?: string;
-  averageRating: number;
-  reviewCount: number;
+  rating: number;
+  totalReviews: number;
   isVerified: boolean;
-  isOpen: boolean;
+  isActive: boolean;
   openingHours?: string;
   latitude?: number;
   longitude?: number;
@@ -92,7 +92,7 @@ export interface TrustBadge {
 
 export const centersApi = createApi({
   reducerPath: 'centersApi',
-  tagTypes: ['Badges'],
+  tagTypes: ['Centers', 'Center', 'Badges'],
   baseQuery: fetchBaseQuery({
     baseUrl: API_BASE_URL,
     prepareHeaders: (headers, { getState }) => {

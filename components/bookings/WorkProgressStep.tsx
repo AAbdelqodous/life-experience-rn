@@ -33,7 +33,7 @@ export default function WorkProgressStep({ item, isLast, isRTL }: Props) {
 
   return (
     <View style={[styles.container, isRTL && styles.containerRTL]}>
-      <View style={styles.iconColumn}>
+      <View style={[styles.iconColumn, isRTL && styles.iconColumnRTL]}>
         <Ionicons name={iconName as any} size={22} color={iconColor} />
         {!isLast && <View style={[styles.connector, item.isCompleted && styles.connectorDone]} />}
       </View>
@@ -79,6 +79,10 @@ const styles = StyleSheet.create({
     marginRight: 12,
     marginLeft: 4,
     width: 24,
+  },
+  iconColumnRTL: {
+    marginRight: 4,
+    marginLeft: 12,
   },
   connector: {
     flex: 1,

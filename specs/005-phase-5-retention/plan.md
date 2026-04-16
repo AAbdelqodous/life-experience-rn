@@ -18,7 +18,6 @@ Phase 4.5 adds six customer-retention features to the React Native app: a Loyalt
 **Storage**: Redux in-memory store + expo-secure-store (JWT) — no new storage
 **Testing**: Jest + @testing-library/react-native (existing)
 **Target Platform**: iOS + Android (Expo managed workflow); web via react-native-web
-**Project Type**: mobile-app
 **Performance Goals**: Loyalty dashboard < 1s; photo-free screens render in < 16ms; paginated history loads next page in < 1s
 **Constraints**: RTL mandatory; offline-graceful (all screens show empty/cached states); JWT required; vehicle form validates year client-side + server-side
 **Scale/Scope**: 4 new API slices, 6 new components, 8 new screens, 1 existing screen updated (profile/index.tsx)

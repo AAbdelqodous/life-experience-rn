@@ -17,7 +17,7 @@ export default function BookingDetailScreen() {
   const isRTL = i18n.dir() === 'rtl';
 
   const bookingId = Number(params.id);
-  const { data: booking, isLoading } = useGetBookingByIdQuery(bookingId);
+  const { data: booking, isLoading, refetch: refetchBooking } = useGetBookingByIdQuery(bookingId);
   const { data: quote, refetch: refetchQuote } = useGetBookingQuoteQuery(bookingId, {
     skip: booking?.bookingStatus !== BookingStatus.QUOTE_READY,
   });
@@ -246,8 +246,8 @@ export default function BookingDetailScreen() {
             <QuoteCard
               quote={quote}
               isRTL={isRTL}
-              onApproved={() => refetchQuote()}
-              onRejected={() => refetchQuote()}
+              onApproved={() => { refetchBooking(); refetchQuote(); }}
+              onRejected={() => { refetchBooking(); refetchQuote(); }}
             />
           </View>
         )}
@@ -587,7 +587,7 @@ const styles = StyleSheet.create({
     color: '#1A1A2E',
   },
   actions: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     gap: 12,
     marginTop: 20,
   },

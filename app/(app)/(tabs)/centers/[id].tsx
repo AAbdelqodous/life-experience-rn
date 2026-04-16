@@ -110,7 +110,7 @@ export default function CenterDetailScreen() {
     <>
       <Stack.Screen
         options={{
-          title: isRTL ? center?.centerNameAr : center?.centerNameEn,
+          title: isRTL ? center?.nameAr : center?.nameEn,
           headerStyle: {
             backgroundColor: '#fff',
           },
@@ -142,7 +142,7 @@ export default function CenterDetailScreen() {
             <View style={styles.section}>
               <AppText style={styles.sectionTitle}>{t('center.name')}</AppText>
               <AppText style={styles.centerName}>
-                {isRTL ? center?.centerNameAr : center?.centerNameEn}
+                {isRTL ? center?.nameAr : center?.nameEn}
               </AppText>
             </View>
 
@@ -165,7 +165,7 @@ export default function CenterDetailScreen() {
             {/* Description */}
             <View style={styles.section}>
               <AppText style={styles.sectionTitle}>{t('center.about')}</AppText>
-              <AppText style={styles.description}>{center?.description}</AppText>
+              <AppText style={styles.description}>{isRTL ? center?.descriptionAr : center?.descriptionEn}</AppText>
             </View>
 
             {/* Contact */}
@@ -175,7 +175,7 @@ export default function CenterDetailScreen() {
                 <Ionicons name="business" size={20} color="#757575" />
                 <AppText style={styles.infoLabel}>{t('center.details')}</AppText>
                 <AppText style={styles.infoValue}>
-                  {isRTL ? center?.centerNameAr : center?.centerNameEn}
+                  {isRTL ? center?.nameAr : center?.nameEn}
                 </AppText>
               </View>
               <TouchableOpacity

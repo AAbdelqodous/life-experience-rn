@@ -1,4 +1,4 @@
-# Maintenance Customer App — Claude Code Context
+﻿# Maintenance Customer App — Claude Code Context
 
 ## 🎯 Project Overview
 

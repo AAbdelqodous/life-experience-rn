@@ -13,6 +13,10 @@ import { progressApi } from './api/progressApi';
 import { mediaApi } from './api/mediaApi';
 import { quoteApi } from './api/quoteApi';
 import { reviewsApi } from './api/reviewsApi';
+import { loyaltyApi } from './api/loyaltyApi';
+import { vehiclesApi } from './api/vehiclesApi';
+import { remindersApi } from './api/remindersApi';
+import { referralApi } from './api/referralApi';
 import authReducer from './authSlice';
 import bookingsReducer from './bookingsSlice';
 import centersReducer from './centersSlice';
@@ -42,6 +46,10 @@ export const store = configureStore({
     [progressApi.reducerPath]: progressApi.reducer,
     [mediaApi.reducerPath]: mediaApi.reducer,
     [quoteApi.reducerPath]: quoteApi.reducer,
+    [loyaltyApi.reducerPath]: loyaltyApi.reducer,
+    [vehiclesApi.reducerPath]: vehiclesApi.reducer,
+    [remindersApi.reducerPath]: remindersApi.reducer,
+    [referralApi.reducerPath]: referralApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -57,6 +65,10 @@ export const store = configureStore({
       progressApi.middleware,
       mediaApi.middleware,
       quoteApi.middleware,
+      loyaltyApi.middleware,
+      vehiclesApi.middleware,
+      remindersApi.middleware,
+      referralApi.middleware,
     ),
 });
 
