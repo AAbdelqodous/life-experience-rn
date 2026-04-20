@@ -68,19 +68,19 @@ export const vehiclesApi = createApi({
   tagTypes: ['Vehicles', 'VehicleDashboard'],
   endpoints: (builder) => ({
     getVehicles: builder.query<UserVehicle[], void>({
-      query: () => 'vehicles',
+      query: () => '/vehicles',
       providesTags: ['Vehicles'],
     }),
     createVehicle: builder.mutation<UserVehicle, CreateVehicleRequest>({
-      query: (body) => ({ url: 'vehicles', method: 'POST', body }),
+      query: (body) => ({ url: '/vehicles', method: 'POST', body }),
       invalidatesTags: ['Vehicles'],
     }),
     deleteVehicle: builder.mutation<void, number>({
-      query: (id) => ({ url: `vehicles/${id}`, method: 'DELETE' }),
+      query: (id) => ({ url: `/vehicles/${id}`, method: 'DELETE' }),
       invalidatesTags: ['Vehicles'],
     }),
     getVehicleDashboard: builder.query<VehicleDashboard, number>({
-      query: (id) => `vehicles/${id}/dashboard`,
+      query: (id) => `/vehicles/${id}/dashboard`,
       providesTags: (result, error, id) => [{ type: 'VehicleDashboard', id }],
     }),
   }),

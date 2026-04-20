@@ -17,13 +17,20 @@ import { loyaltyApi } from './api/loyaltyApi';
 import { vehiclesApi } from './api/vehiclesApi';
 import { remindersApi } from './api/remindersApi';
 import { referralApi } from './api/referralApi';
-import authReducer from './authSlice';
+import authReducer, { clearSession } from './authSlice';
 import bookingsReducer from './bookingsSlice';
 import centersReducer from './centersSlice';
 import chatReducer from './chatSlice';
 import favoritesReducer from './favoritesSlice';
 import notificationsReducer from './notificationsSlice';
 import uiReducer from './uiSlice';
+
+const unauthorizedMiddleware: import('@reduxjs/toolkit').Middleware = (api) => (next) => (action: any) => {
+  if (action?.payload?.status === 401) {
+    api.dispatch(clearSession());
+  }
+  return next(action);
+};
 
 export const store = configureStore({
   reducer: {
@@ -53,6 +60,7 @@ export const store = configureStore({
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
+      unauthorizedMiddleware,
       authApi.middleware,
       centersApi.middleware,
       bookingsApi.middleware,

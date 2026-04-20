@@ -409,6 +409,13 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 12,
   },
+  infoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F5F5F5',
+  },
   infoLabel: {
     fontSize: 14,
     color: '#757575',

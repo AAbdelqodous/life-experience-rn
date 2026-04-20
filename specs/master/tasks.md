@@ -180,3 +180,129 @@ Remaining: bookings/new.tsx, bookings/[id].tsx, bookings/confirmation.tsx, booki
 - `[USn]` = traceability label linking task to user story
 - Phase 1 total tasks: **51** | Completed: **51** | Remaining: **0**
 - Phase 2 screens: ~17 screens complete, ~9 screens remaining
+
+---
+
+---
+
+# Tasks: Phase 2 — Core Screens (Wrap-up) & Phase 3 — Production Readiness
+
+**Input**: Codebase audit 2026-04-20. All Phase 2 screens exist and are functional. Phase 3 is production hardening.
+
+---
+
+## Phase 2 Wrap-up
+
+**Purpose**: Close out the 2 tasks incorrectly marked incomplete and fill the 2 stub screens that still have empty section bodies.
+
+- [X] T052 Mark T044 complete — `__tests__/components/OtpInput.test.tsx` already exists on disk; checkbox was stale
+- [X] T053 Mark T045 complete — `__tests__/components/AuthInput.test.tsx` already exists on disk; checkbox was stale
+- [ ] T054 Add bilingual privacy policy content to `app/(app)/privacy.tsx` — sections exist but body is empty; render translated text from i18n keys
+- [ ] T055 Add bilingual terms of service content to `app/(app)/terms.tsx` — sections exist but body is empty; render translated text from i18n keys
+- [ ] T056 Add i18n keys for privacy and terms body text to `lib/i18n/locales/en.json` and `ar.json`
+
+**Checkpoint**: Phase 2 fully done — no empty screens remain.
+
+---
+
+## Phase 3: Push Notifications
+
+**Goal**: Customers receive booking status updates and chat messages as push notifications.
+
+- [ ] T057 Add EAS project ID to `app.json` under `extra.eas.projectId` — required for Expo push service
+- [ ] T058 Install `expo-notifications`; add `google-services.json` for Android FCM; configure notification permissions in `app.config.js`
+- [ ] T059 Create `hooks/usePushNotifications.ts` — request permission, get Expo push token, handle foreground notifications
+- [ ] T060 Register device push token with backend on login — call profile or notifications API endpoint with token
+
+**Checkpoint**: Push token registered; test notification delivered to device.
+
+---
+
+## Phase 3: Refresh Token Flow
+
+**Goal**: JWT silently renews before expiry so users are never force-logged out mid-session.
+
+- [ ] T061 Add `refreshToken` endpoint to `store/api/authApi.ts` — `POST /auth/refresh`; store new JWT via `secureStorage.setJwt`
+- [ ] T062 Store refresh token in `lib/secureStorage.ts` alongside JWT — add `getRefreshToken`, `setRefreshToken`, `deleteRefreshToken`
+- [ ] T063 Update 401 middleware in `store/index.ts` — on 401, attempt silent refresh + retry original request; only dispatch `clearSession` if refresh also fails
+
+**Checkpoint**: Expired JWT auto-renews; user stays authenticated without re-login prompt.
+
+---
+
+## Phase 3: HTTPS / WSS Enforcement
+
+**Goal**: All traffic uses TLS in production builds; no plaintext HTTP or WS in release APK/IPA.
+
+- [ ] T064 Update `lib/constants/config.ts` — when `__DEV__ === false`, assert `API_BASE_URL` starts with `https://` and throw if not; derive `WS_BASE_URL` from `https://` → `wss://`
+- [ ] T065 Update `.env.example` — document `EXPO_PUBLIC_API_BASE_URL` must use `https://` for production
+
+**Checkpoint**: `npx expo run:android --variant release` hits `https://` endpoint; WebSocket connects on `wss://`.
+
+---
+
+## Phase 3: Crash Reporting
+
+**Goal**: All unhandled exceptions are captured and reported to Sentry with full context.
+
+- [ ] T066 Install `@sentry/react-native`; add `SENTRY_DSN` to `app.config.js` extra and `.env`
+- [ ] T067 Initialize Sentry in `app/_layout.tsx` before React tree renders; wrap with `Sentry.wrap`
+- [ ] T068 Update `ErrorBoundary` in `app/_layout.tsx` — call `Sentry.captureException` in `componentDidCatch`
+- [ ] T069 Add `Sentry.addBreadcrumb` for key user actions: login, booking created, message sent
+
+**Checkpoint**: Forced crash in dev → Sentry issue appears in dashboard with stack trace.
+
+---
+
+## Phase 3: Certificate Pinning
+
+**Goal**: RTK Query rejects responses from servers with unexpected TLS certificates (MITM protection).
+
+- [ ] T070 Research pinning options for Expo managed workflow (react-native-ssl-pinning or OkHttp interceptor via config plugin)
+- [ ] T071 Implement certificate pinning in RTK Query `baseQuery` — add pinned cert hashes for production API host
+- [ ] T072 Add `.env` variable `EXPO_PUBLIC_CERT_HASH` for the pinned certificate SHA-256
+
+**Checkpoint**: Proxied request via Charles/mitmproxy fails with pinning error; direct request succeeds.
+
+---
+
+## Phase 3: EAS Build & App Store Submission
+
+**Goal**: Production APK and IPA built via EAS and submitted to Google Play / App Store.
+
+- [ ] T073 Create `eas.json` at project root — define `development`, `preview`, and `production` build profiles
+- [ ] T074 Prepare app store assets — 1024×1024 icon (no alpha), 2732×2732 splash, 5–8 phone screenshots per locale
+- [ ] T075 Configure `app.json` — set `android.package`, `ios.bundleIdentifier`, `version`, `buildNumber`
+- [ ] T076 Run `eas build --platform android --profile production` — verify signed AAB
+- [ ] T077 Run `eas build --platform ios --profile production` — verify IPA archive
+- [ ] T078 Run full release checklist: Phase 1 manual tests (21/21) + booking flow + chat + push notification end-to-end
+
+**Checkpoint**: Signed builds pass internal QA; submitted to store review.
+
+---
+
+## Dependencies & Execution Order (Phase 3)
+
+- **Push Notifications (T057–T060)**: Depends on EAS project ID (T057); can run in parallel with Refresh Token
+- **Refresh Token (T061–T063)**: Depends on Phase 1 auth infrastructure; independent of push
+- **HTTPS/WSS (T064–T065)**: Independent; do before EAS production build
+- **Crash Reporting (T066–T069)**: Independent; do before EAS production build
+- **Certificate Pinning (T070–T072)**: Depends on production API hostname being known; do last before EAS build
+- **EAS Build (T073–T078)**: Depends on all above Phase 3 tasks being complete
+
+---
+
+## Phase 2 & 3 Summary
+
+| Phase | Tasks | Status |
+|-------|-------|--------|
+| Phase 2 Wrap-up | T052–T056 | T052–T053 complete; T054–T056 remaining |
+| Phase 3 Push Notifications | T057–T060 | Not started |
+| Phase 3 Refresh Token | T061–T063 | Not started |
+| Phase 3 HTTPS/WSS | T064–T065 | Not started |
+| Phase 3 Crash Reporting | T066–T069 | Not started |
+| Phase 3 Certificate Pinning | T070–T072 | Not started |
+| Phase 3 EAS & App Store | T073–T078 | Not started |
+
+- Phase 2 total new tasks: **5** | Completed: **2** | Remaining: **3**
+- Phase 3 total tasks: **22** | Completed: **0** | Remaining: **22**
